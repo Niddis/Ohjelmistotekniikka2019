@@ -1,0 +1,104 @@
+commit 7e78f9cba13c803ac45f613de45e129459f455b8
+Author: Emma Ilkka <emma.ilkka@gmail.com>
+Date:   Thu Mar 14 11:08:52 2019 +0200
+
+    poistettiin ja uudelleennimettiin tiedostoja
+
+ tiedostoja/file2             | 0
+ tiedostoja/{file1 => file22} | 0
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+
+commit cd272c700474e62e69b8413f9c787f3eb53b6d2d
+Author: Emma Ilkka <emma.ilkka@gmail.com>
+Date:   Thu Mar 14 11:01:56 2019 +0200
+
+    lisättiin file1, file2 ja file3
+
+ tiedostoja/file1 | 0
+ tiedostoja/file2 | 0
+ tiedostoja/file3 | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+
+commit c4ac2254807d556bcc82a4c541309365bdd21bd3
+Author: Emma Ilkka <emma.ilkka@gmail.com>
+Date:   Thu Mar 14 10:54:09 2019 +0200
+
+    muokattiin tiedostoja eka.txt ja kolmas.txt
+
+ eka.txt    | 5 +----
+ kolmas.txt | 4 +++-
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+commit 0966b0a29aa837082261eda4b7693106f197188c
+Author: Emma Ilkka <emma.ilkka@gmail.com>
+Date:   Thu Mar 14 10:50:56 2019 +0200
+
+    uudelleennimettiin tiedosto.txt -> eka.txt
+
+ tiedosto.txt => eka.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 3bf61d7501239f1e3e518b92a1c8bc3b9c33217d
+Author: Emma Ilkka <emma.ilkka@gmail.com>
+Date:   Thu Mar 14 10:48:24 2019 +0200
+
+    poistettiin toinen.txt
+
+ toinen.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit dc730c23a6d6bf832b55e49b6c855893d4a7fb23
+Author: Emma Ilkka <emma.ilkka@gmail.com>
+Date:   Thu Mar 14 10:44:30 2019 +0200
+
+    muokkauksia
+
+ tiedosto.txt | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+commit a78c2ad7ea483860b7f2c1877943bed53ed6555d
+Author: Emma Ilkka <emma.ilkka@gmail.com>
+Date:   Thu Mar 14 10:31:42 2019 +0200
+
+    lisättiin uusi kansio ja tiedosto
+
+ stuff.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 2e5f3ffb05467e94b4303fdb185c174a86b37c72
+Author: Emma Ilkka <emma.ilkka@gmail.com>
+Date:   Thu Mar 14 10:29:29 2019 +0200
+
+    muutoksia
+
+ kolmas.txt | 1 +
+ toinen.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit 53dd9e89afa1e44950f34f298b05a9c8bf3bf858
+Author: Emma Ilkka <emma.ilkka@gmail.com>
+Date:   Thu Mar 14 10:26:59 2019 +0200
+
+    kolmas.txt luotu
+
+ kolmas.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 423ee9156dcad40359a9c7773a433975556c3580
+Author: Emma Ilkka <emma.ilkka@gmail.com>
+Date:   Thu Mar 14 10:23:38 2019 +0200
+
+    muutos ja lisäys
+
+ tiedosto.txt | 1 +
+ toinen.txt   | 0
+ 2 files changed, 1 insertion(+)
+
+commit 44b522bd4c3ba27d2e76fb39128e9b21aec3eef3
+Author: Emma Ilkka <emma.ilkka@gmail.com>
+Date:   Thu Mar 14 10:20:38 2019 +0200
+
+    tiedosto.txt luotu
+
+ tiedosto.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
