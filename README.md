@@ -14,4 +14,4 @@ Tämä on Helsingin yliopiston *Ohjelmistotekniikka* -kurssin harjoitustyö.
 [komentorivi.txt](../master/laskarit/viikko1/komentorivi.txt)
 
 ### Viikko 2
-[jacoco:report](../master/laskarit/viikko2/jacocoReport.png)
+[jacoco testikattavuusraportti](../master/laskarit/viikko2/jacocoReport.png)
