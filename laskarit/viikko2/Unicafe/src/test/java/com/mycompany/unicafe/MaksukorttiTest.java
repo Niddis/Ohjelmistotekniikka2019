@@ -10,7 +10,7 @@ public class MaksukorttiTest {
 
     @Before
     public void setUp() {
-        kortti = new Maksukortti(10);
+        kortti = new Maksukortti(100);
     }
 
     @Test
@@ -20,35 +20,40 @@ public class MaksukorttiTest {
     
     @Test
     public void konstruktoriAsettaaSaldonOikein() {
-        assertEquals(10, kortti.saldo());
+        assertEquals(100, kortti.saldo());
     }
     
     @Test
     public void rahanLataaminenKasvattaaSaldoaOikein() {
-        kortti.lataaRahaa(25);
-        assertEquals(35, kortti.saldo());
+        kortti.lataaRahaa(250);
+        assertEquals(350, kortti.saldo());
     }
     
     @Test
     public void rahanOttaminenPienentääSaldoaOikeinJosRahaaOnTarpeeksi() {
-        kortti.otaRahaa(5);
-        assertEquals(5, kortti.saldo());
+        kortti.otaRahaa(50);
+        assertEquals(50, kortti.saldo());
     }
     
     @Test
     public void rahanOttaminenEiMuutaSaldoaJosRahaaEiOleTarpeeksi() {
-        kortti.otaRahaa(15);
-        assertEquals(10, kortti.saldo());
+        kortti.otaRahaa(150);
+        assertEquals(100, kortti.saldo());
     }
     
     @Test
     public void otaRahaaPalauttaaTrueJosRahaaOnTarpeeksi() {
-        assertEquals(true, kortti.otaRahaa(5));
+        assertEquals(true, kortti.otaRahaa(50));
     }
     
     @Test
     public void otaRahaaPalauttaaFalseJosRahaaEiOleTarpeeksi() {
-        assertEquals(false, kortti.otaRahaa(15));
+        assertEquals(false, kortti.otaRahaa(150));
+    }
+    
+    @Test
+    public void toStringNäyttääSadonOikein() {
+        assertEquals("saldo: 1.0", kortti.toString());
     }
      
 }

@@ -5,6 +5,8 @@ Tämä on Helsingin yliopiston *Ohjelmistotekniikka* -kurssin harjoitustyö.
 ### Dokumentaatio
 [Vaatimusmäärittely](../master/dokumentointi/vaatimusmaarittely.md)
 
+[Työaikakirjanpito](../master/dokumentointi/tyoaikakirjanpito.md)
+
 ## Laskarit
 ### Viikko 1
 [gitlog.txt](../master/laskarit/viikko1/gitlog.txt)
@@ -12,3 +14,4 @@ Tämä on Helsingin yliopiston *Ohjelmistotekniikka* -kurssin harjoitustyö.
 [komentorivi.txt](../master/laskarit/viikko1/komentorivi.txt)
 
 ### Viikko 2
+[jacoco:report](../master/laskarit/viikko2/jacocoReport.png)
