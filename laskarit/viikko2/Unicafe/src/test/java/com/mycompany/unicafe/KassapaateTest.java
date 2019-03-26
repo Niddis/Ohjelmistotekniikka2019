@@ -199,4 +199,34 @@ public class KassapaateTest {
         kassa.syoEdullisesti(kortti);
         assertEquals(100000, kassa.kassassaRahaa());
     }
+    
+    @Test
+    public void syoMaukkaastiEiMuutaKassanRahamaaraaJosMaksetaanKortilla() {
+        kassa.syoMaukkaasti(kortti);
+        assertEquals(100000, kassa.kassassaRahaa());
+    }
+    
+    @Test
+    public void rahanLataaminenKasvattaaKortillaOlevaaSummaa() {
+        kassa.lataaRahaaKortille(kortti, 100);
+        assertEquals(1100, kortti.saldo());
+    }
+    
+    @Test
+    public void rahanLataaminenKasvattaaKassassaOlevaaSummaa() {
+        kassa.lataaRahaaKortille(kortti, 100);
+        assertEquals(100100, kassa.kassassaRahaa());
+    }
+    
+    @Test
+    public void negatiivinenSummaEiKasvataKortillaOlevaaSummaa() {
+        kassa.lataaRahaaKortille(kortti, -100);
+        assertEquals(1000, kortti.saldo());
+    }
+    
+    @Test
+    public void negatiivinenSummaEiKasvataKassassaOlevaaSummaa() {
+        kassa.lataaRahaaKortille(kortti, -100);
+        assertEquals(100000, kassa.kassassaRahaa());
+    }
 }
