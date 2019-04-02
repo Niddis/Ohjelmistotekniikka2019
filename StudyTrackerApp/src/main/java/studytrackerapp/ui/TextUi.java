@@ -17,12 +17,13 @@ public class TextUi {
     
     public void start() {
         System.out.println("Opintojen seurantasovellus");
+        System.out.println("");
         System.out.println("1 lisää käyttäjä");
         System.out.println("x lopeta");
         
         while (true) {
             System.out.println("");
-            System.out.println("komento: ");
+            System.out.print("komento: ");
             String command = scanner.nextLine();
             
             if (command.equals("x")) {
@@ -36,11 +37,11 @@ public class TextUi {
     }
     
     private void createUser() {
-        System.out.println("Nimi: ");
+        System.out.print("Nimi: ");
         String name = scanner.nextLine();
-        System.out.println("Käyttäjätunnus: ");
+        System.out.print("Käyttäjätunnus: ");
         String username = scanner.nextLine();
-        System.out.println("Salasana: ");
+        System.out.print("Salasana: ");
         String password = scanner.nextLine();
         service.createNewUser(0, name, username, password);
     }

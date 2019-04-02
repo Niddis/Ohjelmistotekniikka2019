@@ -12,6 +12,7 @@ public class Main {
         
         String databaseAddress = "jdbc:sqlite:sta.db";
         Database database = new Database(databaseAddress);
+        database.init();
         
         TextUi ui = new TextUi(scanner, database);
         ui.start();
