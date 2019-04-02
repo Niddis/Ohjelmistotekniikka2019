@@ -10,7 +10,7 @@ public class Main {
         System.out.println("hello");
         Scanner scanner = new Scanner(System.in);
         
-        String databaseAddress = "testi";
+        String databaseAddress = "jdbc:sqlite:sta.db";
         Database database = new Database(databaseAddress);
         
         TextUi ui = new TextUi(scanner, database);

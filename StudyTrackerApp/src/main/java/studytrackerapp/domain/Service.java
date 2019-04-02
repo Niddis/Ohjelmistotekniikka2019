@@ -1,17 +1,17 @@
 package studytrackerapp.domain;
 
 import studytrackerapp.database.Database;
-import studytrackerapp.database.FileUserDao;
+import studytrackerapp.database.SqlUserDao;
 import studytrackerapp.database.UserDao;
 
 public class Service {
     private User loggedIn;
-    private FileUserDao userDao;
+    private SqlUserDao userDao;
     private Database database;
 
     public Service(Database database) {
         this.database = database;
-        this.userDao = new FileUserDao(database);
+        this.userDao = new SqlUserDao(database);
     }
     
     public boolean createNewUser(int id, String name, String username, String password) {

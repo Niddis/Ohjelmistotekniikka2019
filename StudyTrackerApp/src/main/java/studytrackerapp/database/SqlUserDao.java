@@ -4,10 +4,10 @@ import java.sql.*;
 import java.util.List;
 import studytrackerapp.domain.User;
 
-public class FileUserDao implements UserDao {
+public class SqlUserDao implements UserDao {
     private Database database;
 
-    public FileUserDao(Database database) {
+    public SqlUserDao(Database database) {
         this.database = database;
     }
     
@@ -34,7 +34,7 @@ public class FileUserDao implements UserDao {
     @Override
     public User findByUserName(String username) throws SQLException {
         try (Connection conn = database.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT id, name, username, password FROM User WHERE name = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT id, name, username, password FROM User WHERE username = ?");
             stmt.setString(1, username);
             
             ResultSet result = stmt.executeQuery();
