@@ -51,4 +51,18 @@ public class SqlUserDao implements UserDao {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public User findById(int id) throws SQLException {
+        try (Connection conn = database.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM User WHERE id = ?");
+            stmt.setInt(1, id);
+            
+            ResultSet result = stmt.executeQuery();
+            if (!result.next()) {
+                return null;
+            }
+            
+            return new User(result.getInt("id"), result.getString("name"), result.getString("username"), result.getString("password"));
+        }
+    }
+    
 }
