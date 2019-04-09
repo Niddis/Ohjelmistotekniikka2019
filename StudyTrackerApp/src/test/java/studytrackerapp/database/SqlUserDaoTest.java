@@ -20,15 +20,10 @@ public class SqlUserDaoTest {
     
     @Before
     public void setUp() throws Exception {
-        testDatabase = File.createTempFile("test", "db");
-        Database database = new Database("jdbc:sqlite:test.db");
+        testDatabase = File.createTempFile("user_test", "db");
+        Database database = new Database("jdbc:sqlite:user_test.db");
 
-        try (Connection conn = database.getConnection()) {
-            Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE User (id integer PRIMARY KEY, name varchar(20), username varchar(10), password varchar(15));");
-        } catch (Throwable t) {
-            
-        } 
+        database.init();
         dao = new SqlUserDao(database);
     }
     
@@ -51,9 +46,5 @@ public class SqlUserDaoTest {
         assertEquals("Terhi", user.getUsername());
         assertEquals("Terhi Testaaja", user.getName());
     }
-    
-    @After
-    public void tearDown() {
-        testDatabase.delete();
-    }
+
 }

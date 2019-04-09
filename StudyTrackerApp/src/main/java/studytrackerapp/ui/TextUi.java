@@ -37,6 +37,8 @@ public class TextUi {
                 loginUser();
             } else if (command.equals("3")) {
                 logoutUser();
+            } else if (command.equals("4")) {
+                createCourse();
             } else {
                 System.out.println("Virheellinen komento");
             }
@@ -73,15 +75,19 @@ public class TextUi {
         }
         System.out.println("Et ole kirjautunut sisään.");
     }
-    // kesken
+
     private void createCourse() {
+        
         if (service.getLoggedUser() == null) {
             System.out.println("Kirjaudu sisään luodaksesi uuden kurssin.");
         } else {
             System.out.print("Nimi: ");
             String name = scanner.nextLine();
+            System.out.print("Onko kurssi pakollinen (1) vai ei (0)? Syötä 1 tai 0: ");
+            int compulsory = Integer.parseInt(scanner.nextLine());
             System.out.print("Opintopisteet: ");
             int points = Integer.parseInt(scanner.nextLine());
+            service.createNewCourse(0, name, compulsory, points);
         }
     }
 }

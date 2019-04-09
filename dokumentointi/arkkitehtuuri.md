@@ -1,0 +1,1 @@
+<img src="https://raw.githubusercontent.com/Niddis/Ohjelmistotekniikka2019/master/dokumentointi/kuvat/luokkakaavio.png">

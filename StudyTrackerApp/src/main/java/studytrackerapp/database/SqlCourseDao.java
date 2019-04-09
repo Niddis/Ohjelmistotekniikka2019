@@ -16,9 +16,9 @@ public class SqlCourseDao implements CourseDao {
 
     @Override
     public Course create(Course course, User user) throws SQLException {
-        Course byId = getOne(course.getName());
-        if (byId != null) {
-            return byId;
+        Course byName = getOne(course.getName());
+        if (byName != null) {
+            return byName;
         }
         
         try (Connection conn = database.getConnection()) {
