@@ -8,7 +8,7 @@ Sovelluksen käyttäjät voivat pitää kirjaa käymistään kursseista.
 
 [Työaikakirjanpito](../master/dokumentointi/tyoaikakirjanpito.md)
 
-[Arkkitehtuurikuvaus](..master/dokumentointi/arkkitehtuuri.md)
+[Arkkitehtuurikuvaus](../master/dokumentointi/arkkitehtuuri.md)
 
 ### Komentorivitoiminnot
 #### Testaus
