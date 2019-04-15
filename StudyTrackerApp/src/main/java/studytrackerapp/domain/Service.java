@@ -1,6 +1,8 @@
 package studytrackerapp.domain;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import studytrackerapp.database.Database;
 import studytrackerapp.database.SqlCourseDao;
 import studytrackerapp.database.SqlUserDao;
@@ -59,6 +61,34 @@ public class Service {
         }
         try {
             courseDao.create(course, loggedIn);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean deleteCourse(int id) {
+        try {
+            courseDao.delete(id, getLoggedUser().getId());
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+    
+    public List<Course> listCoursesByUser() {
+        List<Course> courses = new ArrayList<>();
+        try {
+            courses = courseDao.getAllByUser(loggedIn.getId());
+        } catch (Exception e) {
+            
+        }
+        return courses;
+    }
+    
+    public boolean setCourseDone(int id) {
+        try {
+            courseDao.setDone(id, loggedIn.getId());
         } catch (Exception e) {
             return false;
         }

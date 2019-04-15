@@ -10,8 +10,6 @@ public class SqlUserDao implements UserDao {
     public SqlUserDao(Database database) {
         this.database = database;
     }
-    
-    
 
     @Override
     public User create(User user) throws SQLException {

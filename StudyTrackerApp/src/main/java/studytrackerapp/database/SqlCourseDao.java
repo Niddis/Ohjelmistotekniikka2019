@@ -1,6 +1,7 @@
 package studytrackerapp.database;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import studytrackerapp.domain.Course;
 import studytrackerapp.domain.User;
@@ -41,7 +42,18 @@ public class SqlCourseDao implements CourseDao {
 
     @Override
     public List<Course> getAllByUser(int userId) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Course> courses = new ArrayList<>();
+        try (Connection conn = database.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Course WHERE user_id = ?");
+            stmt.setInt(1, userId);
+            
+            ResultSet result = stmt.executeQuery();
+            User user = userDao.findById(result.getInt("user_id"));
+            while (result.next()) {
+                courses.add(new Course(result.getInt("id"), result.getString("name"), result.getInt("done"), result.getInt("compulsory"), result.getInt("points"), user));
+            }
+        }
+        return courses;
     }
 
     @Override
@@ -66,8 +78,22 @@ public class SqlCourseDao implements CourseDao {
     }
 
     @Override
-    public void delete(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void delete(int id, int userId) throws SQLException {
+        try (Connection conn = database.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM Course WHERE id = ? AND user_id = ?");
+            stmt.setInt(1, id);
+            stmt.setInt(2, userId);
+            stmt.executeUpdate();
+        }
+    }
+    
+    public void setDone(int id, int userId) throws SQLException {
+        try (Connection conn = database.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET done = 1 WHERE id = ? AND user_id = ?");
+            stmt.setInt(1, id);
+            stmt.setInt(2, userId);
+            stmt.executeUpdate();
+        }
     }
     
 }

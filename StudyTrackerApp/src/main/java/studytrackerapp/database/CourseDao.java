@@ -16,5 +16,5 @@ public interface CourseDao {
     
     Course update(int id) throws SQLException;
     
-    void delete(int id) throws SQLException;
+    void delete(int id, int userId) throws SQLException;
 }

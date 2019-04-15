@@ -27,6 +27,13 @@ Ohjelma suoritetaan komennolla
 ```
 mvn compile exec:java -Dexec.mainClass=studytrackerapp.Main
 ```
+#### Suoritettavan jarin generointi
+Komento
+```
+mvn package
+```
+generoi hakemistoon *target* suoritettavan jar-tiedoston *StudyTrackerApp-1.0-SNAPSHOT.jar*
+
 #### Checkstyle
 Tiedostoon [checkstyle.xml](../master/checkstyle.xml) määritellyt tarkistukset suoritetaan komennolla
 ```

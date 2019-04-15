@@ -18,6 +18,15 @@ public class Course {
         this.user = user;
     }
 
+    public Course(int id, String name, int done, int compulsory, int points, User user) {
+        this.id = id;
+        this.name = name;
+        this.done = done;
+        this.compulsory = compulsory;
+        this.points = points;
+        this.user = user;
+    }
+
     public int getId() {
         return id;
     }
