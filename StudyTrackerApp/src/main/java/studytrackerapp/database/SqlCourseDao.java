@@ -96,4 +96,14 @@ public class SqlCourseDao implements CourseDao {
         }
     }
     
+    public void updateName(int id, int userId, String name) throws SQLException {
+        try (Connection conn = database.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET name = ? WHERE id = ? AND user_id = ?");
+            stmt.setString(1, name);
+            stmt.setInt(2, id);
+            stmt.setInt(3, userId);
+            stmt.executeUpdate();
+        }
+    }
+    
 }

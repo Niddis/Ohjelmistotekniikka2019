@@ -109,6 +109,7 @@ public class TextUi {
             System.out.println("Kirjaudu sisään nähdäksesi omat kurssisi.");
         } else {
             List<Course> courses = new ArrayList<>();
+            int summa = 0;
             courses = service.listCoursesByUser();
             for (Course course: courses) {
                 System.out.print("id: " + course.getId() + ", nimi: " + course.getName() + ", " + course.getPoints()+ " op, ");
@@ -119,10 +120,12 @@ public class TextUi {
                 }
                 if (course.getDone() == 1) {
                     System.out.println("suoritettu");
+                    summa += course.getPoints();
                 } else {
                     System.out.println("suorittamatta");
                 }
             }
+            System.out.println("Suoritettuja opintoja yhteensä " + summa + " op.");
         }
     }
     
@@ -131,7 +134,8 @@ public class TextUi {
             System.out.println("Kirjaudu sisään poistaaksesi kurssin.");
         } else {
             listCoursesByUser();
-            System.out.print("Anna kurssin id: ");
+            System.out.println("");
+            System.out.print("Anna poistettavan kurssin id: ");
             int id = Integer.parseInt(scanner.nextLine());
             boolean success = service.deleteCourse(id);
             if (success) {
@@ -147,27 +151,50 @@ public class TextUi {
             System.out.println("Kirjaudu sisään muokataksesi kurssia.");
         } else {
             listCoursesByUser();
-            System.out.print("Anna kurssin id: ");
+            System.out.println("");
+            System.out.print("Anna päivitettävän kurssin id (0 peruuta): ");
             int id = Integer.parseInt(scanner.nextLine());
+            if (id == 0) {
+                start();
+            }
             System.out.println("1 merkitse kurssi suoritetuksi");
+            System.out.println("2 päivitä kurssin nimi");
             System.out.println("x peruuta");
-            System.out.print("Valitse toiminto: ");
-            String command = scanner.nextLine();
+            
             while (true) {
+                System.out.println("");
+                System.out.print("Valitse toiminto: ");
+                String command = scanner.nextLine();
                 if (command.equals("x")) {
                     break;
                 } else if (command.equals("1")) {
-                    boolean success = service.setCourseDone(id);
-                    if (success) {
-                        System.out.println("Kurssi merkitty suoritetuksi");
-                    } else {
-                        System.out.println("Päivittäminen epäonnistui.");
-                    }
-                    break;
+                    setCourseDone(id);
+                } else if (command.equals("2")) {
+                    updateCourseName(id);
                 } else {
                     System.out.println("Virheellinen valinta.");
                 }
             }
+        }
+    }
+    
+    private void setCourseDone(int id) {
+        boolean success = service.setCourseDone(id);
+        if (success) {
+            System.out.println("Kurssi merkitty suoritetuksi");
+        } else {
+            System.out.println("Päivittäminen epäonnistui.");
+        }
+    }
+    
+    private void updateCourseName(int id) {
+        System.out.print("Anna kurssin uusi nimi: ");
+        String name = scanner.nextLine();
+        boolean success = service.updateCourseName(id, name);
+        if (success) {
+            System.out.println("Kurssin nimi päivitetty.");
+        } else {
+            System.out.println("Päivittäminen epäonnistui.");
         }
     }
 }

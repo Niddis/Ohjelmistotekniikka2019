@@ -6,4 +6,5 @@
 
 <suppressions>
     <suppress files="studytrackerapp.ui.TextUi.java" checks="[a-zA-Z0-9]*"/>
+    <suppress files="studytrackerapp.ui.GraphUi.java" checks="[a-zA-Z0-9]*"/>
 </suppressions>

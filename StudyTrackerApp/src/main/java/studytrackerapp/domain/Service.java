@@ -94,4 +94,13 @@ public class Service {
         }
         return true;
     }
+    
+    public boolean updateCourseName(int id, String name) {
+        try {
+            courseDao.updateName(id, loggedIn.getId(), name);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }
