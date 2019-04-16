@@ -10,6 +10,10 @@ Sovelluksen käyttäjät voivat pitää kirjaa käymistään kursseista.
 
 [Arkkitehtuurikuvaus](../master/dokumentointi/arkkitehtuuri.md)
 
+### Releaset
+
+[Viikko 5](https://github.com/Niddis/Ohjelmistotekniikka2019/releases/tag/viikko5)
+
 ### Komentorivitoiminnot
 #### Testaus
 Testit suoritetaan komennolla

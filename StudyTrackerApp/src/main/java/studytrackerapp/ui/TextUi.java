@@ -97,7 +97,16 @@ public class TextUi {
             System.out.print("Nimi: ");
             String name = scanner.nextLine();
             System.out.print("Onko kurssi pakollinen (1) vai ei (0)? Syötä 1 tai 0: ");
-            int compulsory = Integer.parseInt(scanner.nextLine());
+            //int compulsory = Integer.parseInt(scanner.nextLine());
+            int compulsory;
+            do {
+                System.out.println("Syötä numero");
+                while (!scanner.hasNextInt()) {
+                    System.out.println("et antanut numeroa");
+                    scanner.next();
+                }
+                compulsory = scanner.nextInt();
+            } while (compulsory != 1);
             System.out.print("Opintopisteet: ");
             int points = Integer.parseInt(scanner.nextLine());
             service.createNewCourse(0, name, compulsory, points);

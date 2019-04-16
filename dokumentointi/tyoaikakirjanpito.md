@@ -7,5 +7,5 @@
 | 2.4.  | 3        | ensimmäiset testit
 | 9.4.  | 5        | käyttäjän sisään- ja uloskirjautuminen, uuden kurssin lisääminen, testien laajennus
 | 15.4. | 2        | kurssien listaus, poistaminen ja merkitseminen suoritetuiksi
-| 16.4. | 1,5      | kurssin nimen muuttaminen, graafisen käyttöliittymän aloitus
-| yht.  | 15,5     |
+| 16.4. | 3        | kurssin nimen muuttaminen, graafisen käyttöliittymän aloitus, testien laajennus
+| yht.  | 17       |

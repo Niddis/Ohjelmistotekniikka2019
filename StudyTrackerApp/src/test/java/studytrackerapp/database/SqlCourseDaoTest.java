@@ -32,6 +32,7 @@ public class SqlCourseDaoTest {
         courseDao = new SqlCourseDao(database);
         
         user = userDao.create(new User(1, "Terhi Testaaja", "Terhi", "Testaaja"));
+        courseDao.create(new Course(0, "Ohpe", 1, 5, user), user);
     }
     
     @Test
@@ -47,11 +48,29 @@ public class SqlCourseDaoTest {
         assertEquals(null, course);
     }
     
+    @Test
+    public void allCoursesAreListedByUser() throws SQLException {
+        List<Course> courses = new ArrayList<>();
+        courses = courseDao.getAllByUser(1);
+        assertEquals(1, courses.size());
+    }
+    
+    @Test
+    public void courseIsDeleted() throws SQLException {
+        courseDao.delete(2, 1);
+        Course course = courseDao.getOne("Ohte");
+        assertEquals(null, course);
+    }
+    
     /*@Test
     public void existingCourseIsFound() throws SQLException{
         Course course = courseDao.getOne("Ohte");
         assertEquals("Ohte", course.getName());
         assertEquals(5, course.getPoints());
     }*/
-   
+    
+    @After
+    public void tearDown() {
+        testDatabase.delete();
+    }
 }
