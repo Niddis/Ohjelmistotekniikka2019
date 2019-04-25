@@ -4,6 +4,8 @@ Tämä on Helsingin yliopiston *Ohjelmistotekniikka* -kurssin harjoitustyö.
 ## Opintojen seurantasovellus
 Sovelluksen käyttäjät voivat pitää kirjaa käymistään kursseista.
 ### Dokumentaatio
+[Käyttöohje](../master/dokumentointi/kaytto_ohje.md)
+
 [Vaatimusmäärittely](../master/dokumentointi/vaatimusmaarittely.md)
 
 [Työaikakirjanpito](../master/dokumentointi/tyoaikakirjanpito.md)

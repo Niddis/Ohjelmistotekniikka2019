@@ -106,4 +106,24 @@ public class SqlCourseDao implements CourseDao {
         }
     }
     
+    public void updateCompulsory(int id, int userId, int compulsory) throws SQLException {
+        try (Connection conn = database.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET compulsory = ? WHERE id = ? AND user_id = ?");
+            stmt.setInt(1, compulsory);
+            stmt.setInt(2, id);
+            stmt.setInt(3, userId);
+            stmt.executeUpdate();
+        }
+    }
+    
+    public void updatePoints(int id, int userId, int points) throws SQLException {
+        try (Connection conn = database.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET points = ? WHERE id = ? AND user_id = ?");
+            stmt.setInt(1, points);
+            stmt.setInt(2, id);
+            stmt.setInt(3, userId);
+            stmt.executeUpdate();
+        }
+    }
+    
 }

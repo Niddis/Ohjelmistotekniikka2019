@@ -13,6 +13,7 @@ public class Service {
     private SqlUserDao userDao;
     private SqlCourseDao courseDao;
     private Database database;
+    private List<Course> courses;
 
     public Service(Database database) {
         this.database = database;
@@ -77,7 +78,7 @@ public class Service {
     }
     
     public List<Course> listCoursesByUser() {
-        List<Course> courses = new ArrayList<>();
+        //List<Course> courses = new ArrayList<>();
         try {
             courses = courseDao.getAllByUser(loggedIn.getId());
         } catch (Exception e) {
@@ -102,5 +103,36 @@ public class Service {
             return false;
         }
         return true;
+    }
+    
+    public boolean updateCourseCompulsory(int id, int compulsory) {
+        if (compulsory == 1) {
+            compulsory = 0;
+        } else {
+            compulsory = 1;
+        }
+        try {
+            courseDao.updateCompulsory(id, loggedIn.getId(), compulsory);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean updateCoursePoints(int id, int points) {
+        try {
+            courseDao.updatePoints(id, loggedIn.getId(), points);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+    
+    public int sumPoints() {
+        int sum = 0;
+        for (Course course: courses) {
+            sum += course.getPoints();
+        }
+        return sum;
     }
 }

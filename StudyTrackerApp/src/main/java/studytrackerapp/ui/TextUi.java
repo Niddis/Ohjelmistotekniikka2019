@@ -11,6 +11,7 @@ public class TextUi {
     private Scanner scanner;
     private Service service;
     private Database database;
+    private List<Course> courses;
 
     public TextUi(Scanner scanner, Database database) {
         this.scanner = scanner;
@@ -75,6 +76,7 @@ public class TextUi {
         boolean success = service.login(username, password);
         if (success) {
             System.out.println("Sisäänkirjautuminen onnistui!");
+            courses = service.listCoursesByUser();
         } else {
             System.out.println("Virheellinen käyttäjätunnus tai salasana.");
         }
@@ -89,11 +91,8 @@ public class TextUi {
         }
     }
 
-    private void createCourse() {
-        
-        if (service.getLoggedUser() == null) {
-            System.out.println("Kirjaudu sisään luodaksesi uuden kurssin.");
-        } else {
+    private void createCourse() { 
+        if (isUserLoggedIn()) {
             System.out.print("Nimi: ");
             String name = scanner.nextLine();
             System.out.print("Onko kurssi pakollinen (1) vai ei (0)? Syötä 1 tai 0: ");
@@ -105,11 +104,7 @@ public class TextUi {
     }
     
     private void listCoursesByUser() {
-        if (service.getLoggedUser() == null) {
-            System.out.println("Kirjaudu sisään nähdäksesi omat kurssisi.");
-        } else {
-            List<Course> courses = new ArrayList<>();
-            int summa = 0;
+        if (isUserLoggedIn()) {
             courses = service.listCoursesByUser();
             for (Course course: courses) {
                 System.out.print("id: " + course.getId() + ", nimi: " + course.getName() + ", " + course.getPoints()+ " op, ");
@@ -120,19 +115,17 @@ public class TextUi {
                 }
                 if (course.getDone() == 1) {
                     System.out.println("suoritettu");
-                    summa += course.getPoints();
                 } else {
                     System.out.println("suorittamatta");
                 }
             }
-            System.out.println("Suoritettuja opintoja yhteensä " + summa + " op.");
+            System.out.println("");
+            System.out.println("Suoritettuja opintoja yhteensä " + service.sumPoints() + " op.");
         }
     }
     
     private void deleteCourse() {
-        if (service.getLoggedUser() == null) {
-            System.out.println("Kirjaudu sisään poistaaksesi kurssin.");
-        } else {
+        if (isUserLoggedIn()) {
             listCoursesByUser();
             System.out.println("");
             System.out.print("Anna poistettavan kurssin id: ");
@@ -147,9 +140,7 @@ public class TextUi {
     }
     
     private void updateCourse() {
-        if (service.getLoggedUser() == null) {
-            System.out.println("Kirjaudu sisään muokataksesi kurssia.");
-        } else {
+        if (isUserLoggedIn()) {
             listCoursesByUser();
             System.out.println("");
             System.out.print("Anna päivitettävän kurssin id (0 peruuta): ");
@@ -159,6 +150,8 @@ public class TextUi {
             }
             System.out.println("1 merkitse kurssi suoritetuksi");
             System.out.println("2 päivitä kurssin nimi");
+            System.out.println("3 päivitä kurssin pakollisuus");
+            System.out.println("4 päivitä kurssin opintopisteet");
             System.out.println("x peruuta");
             
             while (true) {
@@ -171,6 +164,10 @@ public class TextUi {
                     setCourseDone(id);
                 } else if (command.equals("2")) {
                     updateCourseName(id);
+                } else if (command.equals("3")) {
+                    updateCourseCompulsory(id);
+                } else if (command.equals("4")) {
+                    updateCoursePoints(id);
                 } else {
                     System.out.println("Virheellinen valinta.");
                 }
@@ -196,5 +193,43 @@ public class TextUi {
         } else {
             System.out.println("Päivittäminen epäonnistui.");
         }
+    }
+    
+    private void updateCourseCompulsory(int id) {
+        int compulsory = 0;
+        for (Course course: courses) {
+            if (course.getId() == id) {
+                compulsory = course.getCompulsory();
+            }
+        }
+        boolean success = service.updateCourseCompulsory(id, compulsory);
+        if (success) {
+            if (compulsory == 1) {
+                System.out.println("Kurssi päivitetty valinnaiseksi");
+            } else {
+                System.out.println("Kurssi päivitetty pakolliseksi");
+            }
+        } else {
+            System.out.println("Päivittäminen epäonnistui");
+        }
+    }
+    
+    private void updateCoursePoints(int id) {
+        System.out.print("Anna kurssin uudet opintopisteet: ");
+        int points = Integer.parseInt(scanner.nextLine());
+        boolean success = service.updateCoursePoints(id, points);
+        if (success) {
+            System.out.println("Kurssin opintopisteet päivitetty.");
+        } else {
+            System.out.println("Päivittäminen epäonnistui.");
+        }
+    }
+    
+    private boolean isUserLoggedIn() {
+        if (service.getLoggedUser() == null) {
+            System.out.println("Kirjaudu ensin sisään");
+            return false;
+        }
+        return true;
     }
 }
