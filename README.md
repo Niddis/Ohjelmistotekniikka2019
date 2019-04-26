@@ -16,6 +16,8 @@ Sovelluksen käyttäjät voivat pitää kirjaa käymistään kursseista.
 
 [Viikko 5](https://github.com/Niddis/Ohjelmistotekniikka2019/releases/tag/viikko5)
 
+[Viikko 6](https://github.com/Niddis/Ohjelmistotekniikka2019/releases/tag/viikko6)
+
 ### Komentorivitoiminnot
 #### Testaus
 Testit suoritetaan komennolla

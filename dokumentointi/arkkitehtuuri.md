@@ -5,7 +5,7 @@ Ohjelman rakenne koostuu kolmesta pakkauksesta, jotka muodostavat kolmitasoisen 
 
 ## Sovelluslogiikka
 
-Sovelluksessa on kaksi ydinluokkaa User ja Course, joille muut luokat tarjoavat palveluja. 
+Sovelluksessa on kaksi ydinluokkaa User ja Course, jotka kuvaavat käyttäjiä ja käyttäjien kursseja. Luokan Service olio vastaa toiminnallisista kokonaisuuksista ja uusien User- ja Course-olioiden luomisesta. Service-olio on yhteydessä luokkiin SqlUserDao ja SqlCourseDao, jotka toteuttavat UserDao- ja CourseDao-rajapinnat ja vastaavat tiedon pysyväistallentamisesta. 
 
 <img src="https://raw.githubusercontent.com/Niddis/Ohjelmistotekniikka2019/master/dokumentointi/kuvat/luokkakaavio.png">
 
