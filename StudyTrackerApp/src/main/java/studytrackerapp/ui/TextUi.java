@@ -65,7 +65,12 @@ public class TextUi {
         String username = scanner.nextLine();
         System.out.print("Salasana: ");
         String password = scanner.nextLine();
-        service.createNewUser(0, name, username, password);
+        boolean success = service.createNewUser(0, name, username, password);
+        if (success) {
+            System.out.println("Uusi käyttäjä luotu! Voit nyt kirjautua sisään ohjelmaan.");
+        } else {
+            System.out.println("Käyttäjän luominen epäonnistui. Käyttäjätunnus on jo käytössä.");
+        }
     }
     
     private void loginUser() {
@@ -106,19 +111,7 @@ public class TextUi {
     private void listCoursesByUser() {
         if (isUserLoggedIn()) {
             courses = service.listCoursesByUser();
-            for (Course course: courses) {
-                System.out.print("id: " + course.getId() + ", nimi: " + course.getName() + ", " + course.getPoints()+ " op, ");
-                if (course.getCompulsory() == 1) {
-                    System.out.print("pakollinen, ");
-                } else {
-                    System.out.print("valinnainen, ");
-                }
-                if (course.getDone() == 1) {
-                    System.out.println("suoritettu");
-                } else {
-                    System.out.println("suorittamatta");
-                }
-            }
+            printCourses();
             System.out.println("");
             System.out.println("Suoritettuja opintoja yhteensä " + service.sumPoints() + " op.");
         }
@@ -202,7 +195,7 @@ public class TextUi {
                 compulsory = course.getCompulsory();
             }
         }
-        boolean success = service.updateCourseCompulsory(id, compulsory);
+        boolean success = service.updateCourseCompulsory(id);
         if (success) {
             if (compulsory == 1) {
                 System.out.println("Kurssi päivitetty valinnaiseksi");
@@ -231,5 +224,21 @@ public class TextUi {
             return false;
         }
         return true;
+    }
+    
+    private void printCourses() {
+        for (Course course: courses) {
+            System.out.print("id: " + course.getId() + ", nimi: " + course.getName() + ", " + course.getPoints()+ " op, ");
+            if (course.getCompulsory() == 1) {
+                System.out.print("pakollinen, ");
+            } else {
+                System.out.print("valinnainen, ");
+            }
+            if (course.getDone() == 1) {
+                System.out.println("suoritettu");
+            } else {
+                System.out.println("suorittamatta");
+            }
+        }
     }
 }

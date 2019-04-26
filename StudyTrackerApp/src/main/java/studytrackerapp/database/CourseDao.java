@@ -14,7 +14,7 @@ public interface CourseDao {
     
     Course getOne(String name) throws SQLException;
     
-    Course update(int id) throws SQLException;
+    void update(int userId, Course course) throws SQLException;
     
     void delete(int id, int userId) throws SQLException;
 }

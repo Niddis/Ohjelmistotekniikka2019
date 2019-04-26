@@ -1,6 +1,7 @@
 package studytrackerapp.database;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import studytrackerapp.domain.User;
 
@@ -10,7 +11,12 @@ public class SqlUserDao implements UserDao {
     public SqlUserDao(Database database) {
         this.database = database;
     }
-
+    /**
+     * Metodi lisää uuden käyttäjän tietokantaan.
+     * @param user uusi käyttäjä
+     * @return uusi User-olio
+     * @throws SQLException 
+     */
     @Override
     public User create(User user) throws SQLException {
         User byName = findByUserName(user.getUsername());
@@ -28,7 +34,12 @@ public class SqlUserDao implements UserDao {
         }
         return findByUserName(user.getUsername());
     }
-
+    /**
+     * Metodi hakee yhden käyttäjän tietokannasta käyttäjätunnuksen perusteella.
+     * @param username käyttäjän käyttäjätunnus
+     * @return uusi User-olio tai null, jos käyttäjää ei ole tietokannassa
+     * @throws SQLException 
+     */
     @Override
     public User findByUserName(String username) throws SQLException {
         try (Connection conn = database.getConnection()) {
@@ -46,9 +57,23 @@ public class SqlUserDao implements UserDao {
 
     @Override
     public List<User> getAll() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<User> users = new ArrayList<>();
+        try (Connection conn = database.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM User");
+            
+            ResultSet result = stmt.executeQuery();
+            while (result.next()) {
+                users.add(new User(result.getInt("id"), result.getString("name"), result.getString("username"), result.getString("password")));
+            }
+        }
+        return users;
     }
-    
+    /**
+     * Metodi hakee yhden käyttäjän tietokannasta id:n perusteella.
+     * @param id käyttäjän id
+     * @return uusi User-käyttäjä tai null, jos käyttäjä ei ole tietokannassa
+     * @throws SQLException 
+     */
     public User findById(int id) throws SQLException {
         try (Connection conn = database.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM User WHERE id = ?");

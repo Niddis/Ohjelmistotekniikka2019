@@ -8,5 +8,6 @@
 | 9.4.  | 5        | käyttäjän sisään- ja uloskirjautuminen, uuden kurssin lisääminen, testien laajennus
 | 15.4. | 2        | kurssien listaus, poistaminen ja merkitseminen suoritetuiksi
 | 16.4. | 3        | kurssin nimen muuttaminen, graafisen käyttöliittymän aloitus, testien laajennus
-| 25.4. | 1,5      | kurssin pakollisuuden ja opintopisteiden muuttaminen
-| yht.  | 18,5     |
+| 25.4. | 1,5      | kurssin pakollisuuden ja opintopisteiden muuttaminen, käyttöohje
+| 26.4. | 2,5      | koodin refraktorointia, javadoc ja arkkitehtuurikuvauksen päivittäminen
+| yht.  | 21       |

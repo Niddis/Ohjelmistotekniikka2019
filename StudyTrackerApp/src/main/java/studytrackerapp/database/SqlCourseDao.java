@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import studytrackerapp.domain.Course;
 import studytrackerapp.domain.User;
-
+/**
+ * Luokka tarjoaa erilaisia metodeja tietokannassa olevan Course-taulun käsittelyyn.
+ */
 public class SqlCourseDao implements CourseDao {
     private Database database;
     private SqlUserDao userDao;
@@ -14,7 +16,13 @@ public class SqlCourseDao implements CourseDao {
         this.database = database;
         this.userDao = new SqlUserDao(database);
     }
-
+    /**
+     * Metodi lisää uuden kurssin tietokantaan.
+     * @param course lisättävä kurssi
+     * @param user kurssin luonut käyttäjä
+     * @return uusi course-olio
+     * @throws SQLException 
+     */
     @Override
     public Course create(Course course, User user) throws SQLException {
         Course byName = getOne(course.getName());
@@ -39,12 +47,18 @@ public class SqlCourseDao implements CourseDao {
     public List<Course> getAll() throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    /**
+     * Metodi hakee tietokannasta kaikki kirjautuneena olevan käyttäjän kurssit.
+     * @param userId kirjautuneen käyttäjän id
+     * @return Lista, joka sisältää Course-olioita.
+     * @throws SQLException 
+     */
     @Override
     public List<Course> getAllByUser(int userId) throws SQLException {
         List<Course> courses = new ArrayList<>();
+        String orderBy = "name";
         try (Connection conn = database.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Course WHERE user_id = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Course WHERE user_id = ? ORDER BY " + orderBy);
             stmt.setInt(1, userId);
             
             ResultSet result = stmt.executeQuery();
@@ -55,7 +69,12 @@ public class SqlCourseDao implements CourseDao {
         }
         return courses;
     }
-
+    /**
+     * Metodi hakee yhden kurssin tietokannasta nimen perusteella.
+     * @param name kurssin nimi
+     * @return uusi Course-olio
+     * @throws SQLException 
+     */
     @Override
     public Course getOne(String name) throws SQLException {
         try (Connection conn = database.getConnection()) {
@@ -73,10 +92,24 @@ public class SqlCourseDao implements CourseDao {
     }
 
     @Override
-    public Course update(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void update(int userId, Course course) throws SQLException {
+        try (Connection conn = database.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET name = ?, done = ?, compulsory = ?, points = ? WHERE id = ? AND user_id = ?");
+            stmt.setString(1, course.getName());
+            stmt.setInt(2, course.getDone());
+            stmt.setInt(3, course.getCompulsory());
+            stmt.setInt(4, course.getPoints());
+            stmt.setInt(5, course.getId());
+            stmt.setInt(6, userId);
+            stmt.executeUpdate();
+        }
     }
-
+    /**
+     * Metodi poistaa kurssin tietokannasta id:n perusteella.
+     * @param id poistettavan kurssin id
+     * @param userId kirjautuneen käyttäjän id
+     * @throws SQLException 
+     */
     @Override
     public void delete(int id, int userId) throws SQLException {
         try (Connection conn = database.getConnection()) {
@@ -86,7 +119,12 @@ public class SqlCourseDao implements CourseDao {
             stmt.executeUpdate();
         }
     }
-    
+    /**
+     * Metodi päivittää kurssin done-attribuutin tietokantaan.
+     * @param id päivitettävän kurssin id
+     * @param userId kirjautuneen käyttäjän id
+     * @throws SQLException 
+     */
     public void setDone(int id, int userId) throws SQLException {
         try (Connection conn = database.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET done = 1 WHERE id = ? AND user_id = ?");
@@ -95,7 +133,13 @@ public class SqlCourseDao implements CourseDao {
             stmt.executeUpdate();
         }
     }
-    
+    /**
+     * Metodi päivittää kurssin nimen tietokantaan.
+     * @param id päivitettävän kurssin id
+     * @param userId kirjautuneen käyttäjän id
+     * @param name kurssin uusi nimi
+     * @throws SQLException 
+     */
     public void updateName(int id, int userId, String name) throws SQLException {
         try (Connection conn = database.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET name = ? WHERE id = ? AND user_id = ?");
@@ -105,7 +149,13 @@ public class SqlCourseDao implements CourseDao {
             stmt.executeUpdate();
         }
     }
-    
+    /**
+     * Metodi päivittää kurssin compulsory-attribuutin tietokantaan.
+     * @param id päivitettävän kurssin id
+     * @param userId kirjautuneen käyttäjän id
+     * @param compulsory compulsory-attribuutin uusi arvo
+     * @throws SQLException 
+     */
     public void updateCompulsory(int id, int userId, int compulsory) throws SQLException {
         try (Connection conn = database.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET compulsory = ? WHERE id = ? AND user_id = ?");
@@ -115,7 +165,13 @@ public class SqlCourseDao implements CourseDao {
             stmt.executeUpdate();
         }
     }
-    
+    /**
+     * Metodi päivittää kurssin opintopisteet tietokantaan.
+     * @param id päivitettävän kurssin id
+     * @param userId kirjautuneen käyttäjän id
+     * @param points kurssin uudet opintopisteet
+     * @throws SQLException 
+     */
     public void updatePoints(int id, int userId, int points) throws SQLException {
         try (Connection conn = database.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET points = ? WHERE id = ? AND user_id = ?");

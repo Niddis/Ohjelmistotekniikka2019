@@ -10,11 +10,17 @@ public class Database {
     public Database(String databaseAddress) {
         this.databaseAddress = databaseAddress;
     }
-    
+    /**
+     * Metodi avaa yhteyden tietokantaan.
+     * @return toimiva yhteys
+     * @throws SQLException 
+     */
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(databaseAddress);
     }
-    
+    /**
+     * Metodi alustaa tietokannan, jos sitä ei ole jo olemassa.
+     */
     public void init() {
         List<String> strings = sqlStrings();
 
