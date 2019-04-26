@@ -46,3 +46,10 @@ Tiedostoon [checkstyle.xml](../master/checkstyle.xml) määritellyt tarkistukset
 mvn jxr:jxr checkstyle:checkstyle
 ```
 Mahdolliset virheet selviävät avaamalla selaimella tiedoston *target/site/checkstyle.html*
+
+#### JavaDoc
+JavaDoc generoidaan komennolla
+```
+mvn javadoc:javadoc
+```
+JavaDocia voi tarkastella avaamalla selaimella tiedoston *target/site/apidocs/index.html*

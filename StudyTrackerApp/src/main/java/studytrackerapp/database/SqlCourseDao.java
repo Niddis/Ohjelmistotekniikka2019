@@ -62,6 +62,9 @@ public class SqlCourseDao implements CourseDao {
             stmt.setInt(1, userId);
             
             ResultSet result = stmt.executeQuery();
+            if (!result.next()) {
+                return courses;
+            }
             User user = userDao.findById(result.getInt("user_id"));
             while (result.next()) {
                 courses.add(new Course(result.getInt("id"), result.getString("name"), result.getInt("done"), result.getInt("compulsory"), result.getInt("points"), user));
@@ -90,7 +93,12 @@ public class SqlCourseDao implements CourseDao {
             return new Course(result.getInt("id"), result.getString("name"), result.getInt("compulsory"), result.getInt("points"), user);
         }
     }
-
+    /**
+     * Metodi päivittää kurssin tiedot.
+     * @param userId kirjautuneen käyttäjän id
+     * @param course päivitettävä kurssi
+     * @throws SQLException 
+     */
     @Override
     public void update(int userId, Course course) throws SQLException {
         try (Connection conn = database.getConnection()) {
@@ -119,67 +127,4 @@ public class SqlCourseDao implements CourseDao {
             stmt.executeUpdate();
         }
     }
-    /**
-     * Metodi päivittää kurssin done-attribuutin tietokantaan.
-     * @param id päivitettävän kurssin id
-     * @param userId kirjautuneen käyttäjän id
-     * @throws SQLException 
-     */
-    public void setDone(int id, int userId) throws SQLException {
-        try (Connection conn = database.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET done = 1 WHERE id = ? AND user_id = ?");
-            stmt.setInt(1, id);
-            stmt.setInt(2, userId);
-            stmt.executeUpdate();
-        }
-    }
-    /**
-     * Metodi päivittää kurssin nimen tietokantaan.
-     * @param id päivitettävän kurssin id
-     * @param userId kirjautuneen käyttäjän id
-     * @param name kurssin uusi nimi
-     * @throws SQLException 
-     */
-    public void updateName(int id, int userId, String name) throws SQLException {
-        try (Connection conn = database.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET name = ? WHERE id = ? AND user_id = ?");
-            stmt.setString(1, name);
-            stmt.setInt(2, id);
-            stmt.setInt(3, userId);
-            stmt.executeUpdate();
-        }
-    }
-    /**
-     * Metodi päivittää kurssin compulsory-attribuutin tietokantaan.
-     * @param id päivitettävän kurssin id
-     * @param userId kirjautuneen käyttäjän id
-     * @param compulsory compulsory-attribuutin uusi arvo
-     * @throws SQLException 
-     */
-    public void updateCompulsory(int id, int userId, int compulsory) throws SQLException {
-        try (Connection conn = database.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET compulsory = ? WHERE id = ? AND user_id = ?");
-            stmt.setInt(1, compulsory);
-            stmt.setInt(2, id);
-            stmt.setInt(3, userId);
-            stmt.executeUpdate();
-        }
-    }
-    /**
-     * Metodi päivittää kurssin opintopisteet tietokantaan.
-     * @param id päivitettävän kurssin id
-     * @param userId kirjautuneen käyttäjän id
-     * @param points kurssin uudet opintopisteet
-     * @throws SQLException 
-     */
-    public void updatePoints(int id, int userId, int points) throws SQLException {
-        try (Connection conn = database.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("UPDATE Course SET points = ? WHERE id = ? AND user_id = ?");
-            stmt.setInt(1, points);
-            stmt.setInt(2, id);
-            stmt.setInt(3, userId);
-            stmt.executeUpdate();
-        }
-    }
-    
 }

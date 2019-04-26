@@ -29,6 +29,11 @@ public class Service {
     public void logout() {
         loggedIn = null;
     }
+    
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+    
     /**
      * Metodi kirjaa käyttäjän sisään ohjelmaan.
      * @param username käyttäjän käyttäjätunnus
@@ -129,8 +134,14 @@ public class Service {
      * @return true, jos päivitys onnistuu, muuten false
      */
     public boolean setCourseDone(int id) {
+        Course course = findCourse(id);
+        if (course.getDone() == 1) {
+            course.setDone(0);
+        } else {
+            course.setDone(1);
+        }
         try {
-            courseDao.setDone(id, loggedIn.getId());
+            courseDao.update(loggedIn.getId(), course);
         } catch (Exception e) {
             return false;
         }
@@ -143,8 +154,10 @@ public class Service {
      * @return true, jos päivitys onnistuu, muuten false
      */
     public boolean updateCourseName(int id, String name) {
+        Course course = findCourse(id);
+        course.setName(name);
         try {
-            courseDao.updateName(id, loggedIn.getId(), name);
+            courseDao.update(loggedIn.getId(), course);
         } catch (Exception e) {
             return false;
         }

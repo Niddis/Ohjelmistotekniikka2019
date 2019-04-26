@@ -7,7 +7,6 @@ import studytrackerapp.ui.TextUi;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        System.out.println("hello");
         Scanner scanner = new Scanner(System.in);
         
         String databaseAddress = "jdbc:sqlite:sta.db";

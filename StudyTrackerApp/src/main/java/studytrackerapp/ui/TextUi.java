@@ -98,10 +98,17 @@ public class TextUi {
 
     private void createCourse() { 
         if (isUserLoggedIn()) {
+            int compulsory = 0;
             System.out.print("Nimi: ");
             String name = scanner.nextLine();
-            System.out.print("Onko kurssi pakollinen (1) vai ei (0)? Syötä 1 tai 0: ");
-            int compulsory = Integer.parseInt(scanner.nextLine());
+            while (true) {
+                System.out.print("Onko kurssi pakollinen (1) vai ei (0)? Syötä 1 tai 0: ");
+                String compulsoryString = scanner.nextLine();
+                if (compulsoryString.equals("1") || compulsoryString.equals("0")) {
+                    compulsory = Integer.parseInt(compulsoryString);
+                    break;
+                }
+            }
             System.out.print("Opintopisteet: ");
             int points = Integer.parseInt(scanner.nextLine());
             service.createNewCourse(0, name, compulsory, points);
@@ -227,6 +234,10 @@ public class TextUi {
     }
     
     private void printCourses() {
+        if (courses.isEmpty()) {
+            System.out.println("Ei kursseja.");
+            return;
+        }
         for (Course course: courses) {
             System.out.print("id: " + course.getId() + ", nimi: " + course.getName() + ", " + course.getPoints()+ " op, ");
             if (course.getCompulsory() == 1) {

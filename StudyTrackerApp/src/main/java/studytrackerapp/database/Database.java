@@ -36,8 +36,8 @@ public class Database {
     
     private List<String> sqlStrings() {
         ArrayList<String> strings = new ArrayList<>();
-        strings.add("CREATE TABLE User (id integer PRIMARY KEY, name varchar(50), username varchar(10), password varchar(15));");
-        strings.add("CREATE TABLE Course (id integer PRIMARY KEY, user_id integer, name varchar(50), done integer, compulsory integer, points integer, FOREIGN KEY (user_id) REFERENCES User(id));");
+        strings.add("CREATE TABLE IF NOT EXISTS User (id integer PRIMARY KEY, name varchar(50), username varchar(10), password varchar(15));");
+        strings.add("CREATE TABLE IF NOT EXISTS Course (id integer PRIMARY KEY, user_id integer, name varchar(50), done integer, compulsory integer, points integer, FOREIGN KEY (user_id) REFERENCES User(id));");
         return strings;
     }
 }
