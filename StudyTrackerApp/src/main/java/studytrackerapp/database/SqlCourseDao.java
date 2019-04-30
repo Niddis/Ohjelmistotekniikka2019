@@ -58,18 +58,20 @@ public class SqlCourseDao implements CourseDao {
         List<Course> courses = new ArrayList<>();
         String orderBy = "name";
         try (Connection conn = database.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Course WHERE user_id = ? ORDER BY " + orderBy);
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Course WHERE user_id = ?");
             stmt.setInt(1, userId);
             
             ResultSet result = stmt.executeQuery();
             if (!result.next()) {
                 return courses;
             }
-            User user = userDao.findById(result.getInt("user_id"));
+            System.out.println("resultset: " + result);
+            User user = userDao.findById(userId);
             while (result.next()) {
                 courses.add(new Course(result.getInt("id"), result.getString("name"), result.getInt("done"), result.getInt("compulsory"), result.getInt("points"), user));
             }
         }
+        System.out.println("Sql-kurssit: " + courses);
         return courses;
     }
     /**

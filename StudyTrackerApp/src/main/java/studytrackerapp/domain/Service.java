@@ -120,12 +120,16 @@ public class Service {
      * @return Lista, joka sisältää Course-olioita
      */
     public List<Course> listCoursesByUser() {
-        //List<Course> courses = new ArrayList<>();
+        List<Course> noCourses = new ArrayList<>();
+        if (loggedIn == null) {
+            return noCourses;
+        }
         try {
             courses = courseDao.getAllByUser(loggedIn.getId());
         } catch (Exception e) {
             
         }
+        System.out.println("Servicekurssit: " + courses);
         return courses;
     }
     /**
