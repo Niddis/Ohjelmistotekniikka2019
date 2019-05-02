@@ -151,6 +151,17 @@ public class Service {
         }
         return true;
     }
+    
+    public boolean updateCourse(int id, String name, int done, int compulsory, int points) {
+        Course course = new Course(id, name, done, compulsory, points, loggedIn);
+        try {
+            courseDao.update(loggedIn.getId(), course);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+    
     /**
      * Metodi päivittää kurssin nimen.
      * @param id päivitettävän kurssin id

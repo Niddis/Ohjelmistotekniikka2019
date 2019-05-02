@@ -10,4 +10,6 @@
 | 16.4. | 3        | kurssin nimen muuttaminen, graafisen käyttöliittymän aloitus, testien laajennus
 | 25.4. | 1,5      | kurssin pakollisuuden ja opintopisteiden muuttaminen, käyttöohje
 | 26.4. | 5,5      | koodin refraktorointia, testien laajennusta, javadoc ja arkkitehtuurikuvauksen päivittäminen
-| yht.  | 24       |
+| 30.4. | 3,5      | graafisen käyttöliittymän laajentaminen
+| 2.5.  | 1,5      | graafisen käyttöliittymän ja service-luokan laajentaminen  
+| yht.  | 29       |
