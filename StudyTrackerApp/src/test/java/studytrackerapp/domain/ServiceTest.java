@@ -19,7 +19,6 @@ import studytrackerapp.database.SqlUserDao;
 import studytrackerapp.domain.User;
 
 public class ServiceTest {
-    //File testDatabase;
     SqlUserDao userDao;
     SqlCourseDao courseDao;
     Service service;
@@ -27,7 +26,6 @@ public class ServiceTest {
     
     @Before
     public void setUp() throws Exception {
-        //testDatabase = File.createTempFile("service_test", "db");
         database = new Database("jdbc:sqlite:service_test.db");
 
         database.init();
@@ -72,17 +70,14 @@ public class ServiceTest {
         assertEquals(true, success);
     }
     
-    /*@Test
+    @Test
     public void existingCoursenameIsUpdated() {
         service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
         service.login("Terhi", "Testaaja");
-        service.createNewCourse(0, "Ohte", 0, 5);
-        List<Course> courses = new ArrayList<>();
-        courses.add(new Course(1, "Ohte", 0, 5, service.getLoggedUser()));
-        
+        service.createNewCourse(0, "Ohte", 0, 5);       
         boolean success = service.updateCourseName(1, "Ohja");
         assertEquals(true, success);
-    }*/
+    }
     
     @After
     public void tearDown() throws SQLException {

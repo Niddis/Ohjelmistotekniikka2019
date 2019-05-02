@@ -15,8 +15,8 @@ import studytrackerapp.domain.Course;
 import studytrackerapp.domain.Service;
 
 public class GraphUi extends Application {
-    //private Stage primary;
-    private Scene newUserScene;
+    private Scene loginScene;
+    //private Scene newUserScene;
     private Scene coursesScene;
     private Scene newCourseScene;
     private Scene updateCourseScene;
@@ -28,9 +28,10 @@ public class GraphUi extends Application {
 
     @Override
     public void init() throws Exception {
-        database = new Database("jdbc:sqlite:sta.db");
+        this.courseNodes = new VBox(10);
+        this.database = new Database("jdbc:sqlite:sta.db");
         database.init();
-        service = new Service(database);
+        this.service = new Service(database);
         
     }
 
@@ -53,12 +54,15 @@ public class GraphUi extends Application {
         loginButton.setOnAction(e->{
             String username = usernameInput.getText();
             String password = passwordInput.getText();
-            System.out.println(username + " " + password);
+            //System.out.println(username + " " + password);
             boolean loginOk = service.login(username, password);
             if (loginOk) {
                 message.setText("");
+                service.listCoursesByUser();
                 updateCourseList(primary);
-                primary.setScene(coursesScene);
+                primary.setScene(listCourses(primary));
+                usernameInput.setText("");
+                passwordInput.setText("");
             } else {
                 message.setText("Virheellinen käyttäjätunnus tai salasana.");
                 message.setTextFill(Color.RED);
@@ -66,7 +70,7 @@ public class GraphUi extends Application {
         });
         createButton.setOnAction(e -> {
             message.setText("");
-            primary.setScene(newUserScene);
+            primary.setScene(createUser(primary));
         });
 
         loginPane.add(message, 1, 0, 3, 1);
@@ -78,10 +82,16 @@ public class GraphUi extends Application {
         loginPane.setVgap(15);
         loginPane.setHgap(10);
 
-        Scene loginScene = new Scene(loginPane, 400, 250);
+        loginScene = new Scene(loginPane, 400, 250);
+
+        //----- setup -----
         
-        //----- creating new user -----
-        
+        primary.setTitle("Opintojen seurantasovellus");
+        primary.setScene(loginScene);
+        primary.show();
+    }
+    
+    private Scene createUser(Stage stage) {
         GridPane newUserPane = new GridPane();
         newUserPane.setPadding(new Insets(10));
         
@@ -107,7 +117,7 @@ public class GraphUi extends Application {
                 if (newUserOk) {
                     message.setText("Uusi käyttäjä luotu");
                     message.setTextFill(Color.GREEN);
-                    primary.setScene(loginScene);
+                    stage.setScene(loginScene);
                 } else {
                     message.setText("Käyttäjätunnus on jo käytössä.");
                     message.setTextFill(Color.RED);
@@ -125,27 +135,34 @@ public class GraphUi extends Application {
         newUserPane.setVgap(15);
         newUserPane.setHgap(10);
         
-        newUserScene = new Scene(newUserPane, 400, 250);
-        
-        //----- main -----
-        
+        return new Scene(newUserPane, 400, 250);
+    }
+    
+    private Scene listCourses(Stage stage) {
         ScrollPane coursesScrollbar = new ScrollPane();
         BorderPane mainPane = new BorderPane(coursesScrollbar);
         coursesScene = new Scene(mainPane, 400, 250);
         
-        Button createCourse = new Button("lisää kurssi");
-        createCourse.setOnAction(e -> {
-            System.out.println("lisää kurssi");
-            primary.setScene(newCourseScene);
+        Button createCourseButton = new Button("lisää kurssi");
+        createCourseButton.setOnAction(e -> {
+            stage.setScene(createCourse(stage));
+        });
+        Button logoutButton = new Button("kirjaudu ulos");
+        logoutButton.setOnAction(e -> {
+            service.logout();
+            stage.setScene(loginScene);
         });
         
-        courseNodes = new VBox(10);
-        updateCourseList(primary);
+        //courseNodes = new VBox(10);
+        //updateCourseList(primary);
+        HBox buttons = new HBox();
+        buttons.getChildren().addAll(createCourseButton, logoutButton);
         coursesScrollbar.setContent(courseNodes);
-        mainPane.setBottom(createCourse);
-        
-        //----- creating new course -----
-        
+        mainPane.setBottom(buttons);
+        return coursesScene;
+    }
+    
+    private Scene createCourse(Stage stage) {
         GridPane newCoursePane = new GridPane();
         newCoursePane.setPadding(new Insets(10));
         
@@ -167,23 +184,37 @@ public class GraphUi extends Application {
         
         Button createNewCourseButton = new Button("Luo kurssi");
         createNewCourseButton.setOnAction(e -> {
-            System.out.println("nimi:" + newCourseNameField.getText().trim() + ".");
+            //System.out.println("nimi:" + newCourseNameField.getText().trim() + ".");
+            String name = newCourseNameField.getText().trim();
+            int points;
+            int compulsory = 0;
+            RadioButton selected = (RadioButton) group.getSelectedToggle();
+            if (selected.getText().equals("kyllä")) {
+                compulsory = 1;
+            }
             if (isInputAnInteger(newCoursePointsField)) {
-                int points = Integer.parseInt(newCoursePointsField.getText());
-                System.out.println(points);
+                points = Integer.parseInt(newCoursePointsField.getText());
+                //System.out.println(points);
+                if (name.length() != 0) {
+                    service.createNewCourse(0, name, compulsory, points);
+                    updateCourseList(stage);
+                    stage.setScene(coursesScene);
+                } else {
+                    newCourseMessage.setText("Kurssin nimi on pakollinen.");
+                }
             } else {
                 newCourseMessage.setText("Et antanut kokonaislukua");
                 newCoursePointsField.setText("");
             }
-            RadioButton selected = (RadioButton) group.getSelectedToggle();
-            System.out.println(selected.getText());
+            
+            //System.out.println(selected.getText());
         });
         Button backToMainSceneButton = new Button("Takaisin");
         backToMainSceneButton.setOnAction(e -> {
-            primary.setScene(coursesScene);
+            stage.setScene(coursesScene);
         });
         
-        newCoursePane.add(newCourseMessage, 0, 0);
+        newCoursePane.add(newCourseMessage, 0, 0, 3, 1);
         newCoursePane.addRow(1, newCourseNameLabel, newCourseNameField);
         newCoursePane.addRow(2, newCoursePointsLabel, newCoursePointsField);
         newCoursePane.addRow(3, newCourseCompulsoryLabel, selectButtonsPane);
@@ -193,16 +224,7 @@ public class GraphUi extends Application {
         newCoursePane.setHgap(10);
         
         newCourseScene = new Scene(newCoursePane, 400, 250);
-        
-        //----- updating course -----
-        
-        
-        
-        //----- setup -----
-        
-        primary.setTitle("Opintojen seurantasovellus");
-        primary.setScene(loginScene);
-        primary.show();
+        return newCourseScene;
     }
     
     private Scene updateCourse(Stage stage) {
@@ -245,7 +267,7 @@ public class GraphUi extends Application {
         updateCourseButton.setOnAction(e -> {
             int compulsory = 0;
             int done = 0;
-            int points = currentCourse.getPoints();
+            int points;
             String name = updateCourseNameInput.getText().trim();
             
             RadioButton selectedCompulsory = (RadioButton) updateCompulsoryGroup.getSelectedToggle();
@@ -260,7 +282,7 @@ public class GraphUi extends Application {
             if (isInputAnInteger(updateCoursePointsInput)) {
                 points = Integer.parseInt(updateCoursePointsInput.getText());
                 //System.out.println(points);
-                if (updateCourseNameInput.getText().trim().length() != 0) {
+                if (name.length() != 0) {
                     service.updateCourse(currentCourse.getId(), name, done, compulsory, points);
                     updateCourseList(stage);
                     stage.setScene(coursesScene);
@@ -313,7 +335,7 @@ public class GraphUi extends Application {
         update.setOnAction(e -> {
             currentCourse = course;
             stage.setScene(updateCourse(stage));
-            System.out.println("muokattava kurssi: " + currentCourse.getName());
+            //System.out.println("muokattava kurssi: " + currentCourse.getName());
         });
         Button deleteButton = new Button("poista");
         deleteButton.setOnAction(e -> {
@@ -327,28 +349,15 @@ public class GraphUi extends Application {
     
     public void updateCourseList(Stage stage) {
         courseNodes.getChildren().clear();
-        List<Course> courses = service.listCoursesByUser();
+        List<Course> courses = service.getCourses();
         if (!courses.isEmpty() && courses != null) {
             courses.forEach(course -> {
                 courseNodes.getChildren().add(createNode(course, stage));
             });
         }
-        System.out.println("Kurssilista: " + courses);
+        //System.out.println("Kurssilista: " + courses);
     }
-    
-    private List<String> coursesList() {
-        List<String> courses = new ArrayList<>();
-        courses.add("Ohpe pakollinen suorittamatta 5 op");
-        courses.add("Ohja pakollinen suorittamatta 5 op");
-        courses.add("Ohja pakollinen suorittamatta 5 op");
-        courses.add("Ohja pakollinen suorittamatta 5 op");
-        courses.add("Ohja pakollinen suorittamatta 5 op");
-        courses.add("Ohja pakollinen suorittamatta 5 op");
-        courses.add("Ohja pakollinen suorittamatta 5 op");
-        courses.add("Ohja pakollinen suorittamatta 5 op");
-        return courses;
-    }
-    
+        
     private boolean isInputAnInteger(TextField field) {
         Boolean isValid = false;
         if (!(field.getText() == null || field.getText().trim().length() == 0)) {

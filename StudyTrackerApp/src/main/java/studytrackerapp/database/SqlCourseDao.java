@@ -25,7 +25,7 @@ public class SqlCourseDao implements CourseDao {
      */
     @Override
     public Course create(Course course, User user) throws SQLException {
-        Course byName = getOne(course.getName());
+        Course byName = getOne(course.getName(), user);
         if (byName != null) {
             return byName;
         }
@@ -40,7 +40,7 @@ public class SqlCourseDao implements CourseDao {
             
             stmt.executeUpdate();
         }
-        return getOne(course.getName());
+        return getOne(course.getName(), user);
     }
 
     @Override
@@ -56,22 +56,16 @@ public class SqlCourseDao implements CourseDao {
     @Override
     public List<Course> getAllByUser(int userId) throws SQLException {
         List<Course> courses = new ArrayList<>();
-        String orderBy = "name";
         try (Connection conn = database.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Course WHERE user_id = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Course WHERE user_id = ? ORDER BY name");
             stmt.setInt(1, userId);
             
             ResultSet result = stmt.executeQuery();
-            if (!result.next()) {
-                return courses;
-            }
-            System.out.println("resultset: " + result);
             User user = userDao.findById(userId);
             while (result.next()) {
                 courses.add(new Course(result.getInt("id"), result.getString("name"), result.getInt("done"), result.getInt("compulsory"), result.getInt("points"), user));
             }
         }
-        System.out.println("Sql-kurssit: " + courses);
         return courses;
     }
     /**
@@ -81,16 +75,17 @@ public class SqlCourseDao implements CourseDao {
      * @throws SQLException 
      */
     @Override
-    public Course getOne(String name) throws SQLException {
+    public Course getOne(String name, User user) throws SQLException {
         try (Connection conn = database.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Course WHERE name = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Course WHERE name = ? AND user_id = ?");
             stmt.setString(1, name);
+            stmt.setInt(2, user.getId());
             
             ResultSet result = stmt.executeQuery();
             if (!result.next()) {
                 return null;
             }
-            User user = userDao.findById(result.getInt("user_id"));
+            //User user = userDao.findById(result.getInt("user_id"));
             
             return new Course(result.getInt("id"), result.getString("name"), result.getInt("compulsory"), result.getInt("points"), user);
         }

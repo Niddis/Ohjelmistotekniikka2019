@@ -12,7 +12,7 @@ public interface CourseDao {
     
     List<Course> getAllByUser(int userId) throws SQLException;
     
-    Course getOne(String name) throws SQLException;
+    Course getOne(String name, User user) throws SQLException;
     
     void update(int userId, Course course) throws SQLException;
     

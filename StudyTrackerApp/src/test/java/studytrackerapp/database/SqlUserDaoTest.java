@@ -17,12 +17,10 @@ import studytrackerapp.domain.User;
 
 public class SqlUserDaoTest {
     SqlUserDao dao;
-    //File testDatabase;
     Database database;
     
     @Before
     public void setUp() throws Exception {
-        //testDatabase = File.createTempFile("user_test", "db");
         database = new Database("jdbc:sqlite:user_test.db");
 
         database.init();

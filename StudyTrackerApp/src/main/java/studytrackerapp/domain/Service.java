@@ -20,6 +20,8 @@ public class Service {
         this.database = database;
         this.userDao = new SqlUserDao(database);
         this.courseDao = new SqlCourseDao(database);
+        this.courses = new ArrayList<>();
+        this.users = new ArrayList<>();
     }
     
     public User getLoggedUser() {
@@ -28,10 +30,15 @@ public class Service {
     
     public void logout() {
         loggedIn = null;
+        courses.clear();
     }
     
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
     }
     
     /**
@@ -96,7 +103,8 @@ public class Service {
             return false;
         }
         try {
-            courseDao.create(course, loggedIn);
+            Course returnedCourse = courseDao.create(course, loggedIn);
+            courses.add(returnedCourse);
         } catch (Exception e) {
             return false;
         }
@@ -108,8 +116,10 @@ public class Service {
      * @return true, jos poistaminen onnistuu, muuten false
      */
     public boolean deleteCourse(int id) {
+        Course course = findCourse(id);
         try {
             courseDao.delete(id, getLoggedUser().getId());
+            courses.remove(course);
         } catch (Exception e) {
             return false;
         }
@@ -129,7 +139,7 @@ public class Service {
         } catch (Exception e) {
             
         }
-        System.out.println("Servicekurssit: " + courses);
+        //System.out.println("Servicekurssit: " + courses);
         return courses;
     }
     /**
@@ -153,9 +163,13 @@ public class Service {
     }
     
     public boolean updateCourse(int id, String name, int done, int compulsory, int points) {
-        Course course = new Course(id, name, done, compulsory, points, loggedIn);
+        Course course = findCourse(id);
         try {
             courseDao.update(loggedIn.getId(), course);
+            course.setName(name);
+            course.setDone(done);
+            course.setCompulsory(compulsory);
+            course.setPoints(points);
         } catch (Exception e) {
             return false;
         }

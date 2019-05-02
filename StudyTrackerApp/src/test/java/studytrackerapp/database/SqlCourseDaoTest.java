@@ -19,13 +19,11 @@ import studytrackerapp.domain.User;
 public class SqlCourseDaoTest {
     SqlCourseDao courseDao;
     SqlUserDao userDao;
-    //File testDatabase;
     User user;
     Database database;
     
     @Before
     public void setUp() throws Exception {
-        //testDatabase = File.createTempFile("course_test", "db");
         database = new Database("jdbc:sqlite:course_test.db");
 
         database.init();
@@ -46,22 +44,21 @@ public class SqlCourseDaoTest {
     
     @Test
     public void nonExistingCourseIsFound() throws SQLException {
-        Course course = courseDao.getOne("notExisting");
+        Course course = courseDao.getOne("notExisting", user);
         assertEquals(null, course);
     }
     
-    /*@Test
+    @Test
     public void allCoursesAreListedByUser() throws SQLException {
         List<Course> courses = new ArrayList<>();
         courses = courseDao.getAllByUser(1);
-        System.out.println("!!!!!!!!" + courses);
         assertEquals(1, courses.size());
-    }*/
+    }
     
     @Test
     public void courseIsDeleted() throws SQLException {
         courseDao.delete(2, 1);
-        Course course = courseDao.getOne("Ohte");
+        Course course = courseDao.getOne("Ohte", user);
         assertEquals(null, course);
     }
     
