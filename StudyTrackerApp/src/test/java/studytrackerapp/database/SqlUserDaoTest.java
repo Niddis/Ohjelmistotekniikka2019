@@ -22,8 +22,8 @@ public class SqlUserDaoTest {
     @Before
     public void setUp() throws Exception {
         database = new Database("jdbc:sqlite:sta_test.db");
-
         database.init();
+        
         dao = new SqlUserDao(database);
     }
     
@@ -40,15 +40,6 @@ public class SqlUserDaoTest {
         User user = dao.findByUserName("notHere");
         assertEquals(null, user);
     }
-    
-    /*@Test
-    public void existingUserIsFound() throws SQLException {
-        User user = new User(1, "Terhi Testaaja", "Terhi", "Testaaja");
-        User returnedUser = dao.create(user);
-        User user = dao.findByUserName("Terhi");
-        assertEquals("Terhi", user.getUsername());
-        assertEquals("Terhi Testaaja", user.getName());
-    }*/
     
     @After
     public void tearDown() throws SQLException {

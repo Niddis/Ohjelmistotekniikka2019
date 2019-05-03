@@ -25,7 +25,6 @@ public class SqlCourseDaoTest {
     @Before
     public void setUp() throws Exception {
         database = new Database("jdbc:sqlite:sta_test.db");
-
         database.init();
         
         userDao = new SqlUserDao(database);
@@ -61,14 +60,7 @@ public class SqlCourseDaoTest {
         Course course = courseDao.getOne("Ohte", user);
         assertEquals(null, course);
     }
-    
-    /*@Test
-    public void existingCourseIsFound() throws SQLException{
-        Course course = courseDao.getOne("Ohte");
-        assertEquals("Ohte", course.getName());
-        assertEquals(5, course.getPoints());
-    }*/
-    
+
     @After
     public void tearDown() throws SQLException {
         try (Connection conn = database.getConnection()) {

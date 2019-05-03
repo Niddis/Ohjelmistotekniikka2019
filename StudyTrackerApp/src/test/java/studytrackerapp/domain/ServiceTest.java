@@ -27,8 +27,8 @@ public class ServiceTest {
     @Before
     public void setUp() throws Exception {
         database = new Database("jdbc:sqlite:sta_test.db");
-
         database.init();
+        
         userDao = new SqlUserDao(database);
         courseDao = new SqlCourseDao(database);
         service = new Service(database);
@@ -54,6 +54,14 @@ public class ServiceTest {
     }
     
     @Test
+    public void userIsLoggedOut() {
+        service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
+        service.login("Terhi", "Testaaja");
+        service.logout();
+        assertEquals(null, service.getLoggedUser());
+    }
+    
+    @Test
     public void newCourseIsCreated() {
         service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
         service.login("Terhi", "Testaaja");
@@ -71,12 +79,104 @@ public class ServiceTest {
     }
     
     @Test
-    public void existingCoursenameIsUpdated() {
+    public void existingCourseIsUpdated() {
+        service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
+        service.login("Terhi", "Testaaja");
+        service.createNewCourse("Ohte", 0, 5);       
+        boolean success = service.updateCourse(1, "Ohja", 1, 1, 6);
+        assertEquals(true, success);
+    }
+    
+    @Test
+    public void nameIsUpdated() {
         service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
         service.login("Terhi", "Testaaja");
         service.createNewCourse("Ohte", 0, 5);       
         boolean success = service.updateCourseName(1, "Ohja");
         assertEquals(true, success);
+    }
+    
+    @Test
+    public void compulsoryIsUpdated() {
+        service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
+        service.login("Terhi", "Testaaja");
+        service.createNewCourse("Ohte", 0, 5);       
+        boolean success = service.updateCourseCompulsory(1);
+        assertEquals(true, success);
+    }
+    
+    @Test
+    public void doneIsUpdated() {
+        service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
+        service.login("Terhi", "Testaaja");
+        service.createNewCourse("Ohte", 0, 5);       
+        boolean success = service.setCourseDone(1);
+        assertEquals(true, success);
+    }
+    
+    @Test
+    public void pointsAreUpdated() {
+        service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
+        service.login("Terhi", "Testaaja");
+        service.createNewCourse("Ohte", 0, 5);       
+        boolean success = service.updateCoursePoints(1, 10);
+        assertEquals(true, success);
+    }
+    
+    @Test
+    public void coursesAreListedByUser() {
+        service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
+        service.createNewUser(0, "Hello World", "Hello", "World");
+        service.login("Terhi", "Testaaja");
+        service.createNewCourse("Ohte", 0, 5);
+        service.createNewCourse("Ohja", 0, 5);
+        service.logout();
+        service.login("Hello", "World");
+        service.createNewCourse("Ohpe", 0, 5);
+        List<Course> courses = service.listCoursesByUser();
+        assertEquals(1, courses.size());
+        assertEquals("Ohpe", service.getCourses().get(0).getName());
+    }
+    
+    @Test
+    public void coursesAreSortedByName() {
+        service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
+        service.login("Terhi", "Testaaja");
+        service.createNewCourse("Ohte", 0, 5);
+        service.createNewCourse("Ohja", 0, 5);
+        service.sortCoursesList("nimi");
+        assertEquals("Ohja", service.getCourses().get(0).getName());
+    }
+    
+    @Test
+    public void coursesAreSortedByCompulsory() {
+        service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
+        service.login("Terhi", "Testaaja");
+        service.createNewCourse("Fullstack", 0, 10);
+        service.createNewCourse("Ohte", 1, 5);
+        service.sortCoursesList("pakollinen");
+        assertEquals("Ohte", service.getCourses().get(0).getName());
+    }
+    
+    @Test
+    public void coursesAreSortedByDone() {
+        service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
+        service.login("Terhi", "Testaaja");
+        service.createNewCourse("Fullstack", 0, 10);
+        service.createNewCourse("Ohte", 1, 5);
+        service.setCourseDone(2);
+        service.sortCoursesList("suoritettu");
+        assertEquals("Ohte", service.getCourses().get(0).getName());
+    }
+    
+    @Test
+    public void coursesAreSortedByPoints() {
+        service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
+        service.login("Terhi", "Testaaja");
+        service.createNewCourse("Fullstack", 0, 10);
+        service.createNewCourse("Ohte", 1, 5);
+        service.sortCoursesList("pisteet");
+        assertEquals("Ohte", service.getCourses().get(0).getName());
     }
     
     @After

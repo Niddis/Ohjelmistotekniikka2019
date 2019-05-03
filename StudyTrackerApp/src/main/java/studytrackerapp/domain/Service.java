@@ -18,6 +18,7 @@ public class Service {
     private List<Course> courses;
     private List<Course> coursesFromFile;
     private List<User> users;
+    private int pointsSum;
 
     public Service(Database database) {
         this.database = database;
@@ -56,6 +57,10 @@ public class Service {
 
     public List<Course> getCoursesFromFile() {
         return coursesFromFile;
+    }
+
+    public int getPointsSum() {
+        return pointsSum;
     }
     
     /**
@@ -157,6 +162,7 @@ public class Service {
             
         }
         //System.out.println("Servicekurssit: " + courses);
+        sumPoints();
         return courses;
     }
     /**
@@ -178,18 +184,27 @@ public class Service {
         }
         return true;
     }
-    
+    /**
+     * Metodi päivittää kurssin kaikki tiedot.
+     * @param id kurssin id
+     * @param name kurssin uusi nimi
+     * @param done kurssin uusi done-arvo
+     * @param compulsory kurssin uusi compulsory-arvo
+     * @param points kurssin uudet opintopisteet
+     * @return true, jos päivitys onnistuu, muuten false
+     */
     public boolean updateCourse(int id, String name, int done, int compulsory, int points) {
         Course course = findCourse(id);
         try {
-            courseDao.update(loggedIn.getId(), course);
             course.setName(name);
             course.setDone(done);
             course.setCompulsory(compulsory);
             course.setPoints(points);
+            courseDao.update(loggedIn.getId(), course);   
         } catch (Exception e) {
             return false;
         }
+        sumPoints();
         return true;
     }
     
@@ -250,21 +265,26 @@ public class Service {
      * Metodi laskee kirjautuneen käyttäjän kurssien opintopisteiden summan.
      * @return opintopisteiden summa
      */
-    public int sumPoints() {
+    private void sumPoints() {
         int sum = 0;
         for (Course course: courses) {
-            sum += course.getPoints();
+            if (course.getDone() == 1) {
+                sum += course.getPoints();
+            }
         }
-        return sum;
+        pointsSum = sum;
     }
-    
+    /**
+     * Metodi järjestää kirjautuneen käyttäjän kurssit parametrina saadun merkkijonon perusteella.
+     * @param sorter merkkijono, jonka perusteella järjestäminen tehdään
+     */
     public void sortCoursesList(String sorter) {
         if (sorter.equals("nimi")) {
             courses.sort((course1, course2) -> course1.getName().compareTo(course2.getName()));
         } else if (sorter.equals("suoritettu")) {
-            courses.sort((course1, course2) -> course1.getDone() - course2.getDone());
+            courses.sort((course1, course2) -> course2.getDone() - course1.getDone());
         } else if (sorter.equals("pakollinen")) {
-            courses.sort((course1, course2) -> course1.getCompulsory() - course2.getCompulsory());
+            courses.sort((course1, course2) -> course2.getCompulsory() - course1.getCompulsory());
         } else {
             courses.sort((course1, course2) -> course1.getPoints() - course2.getPoints());
         }
@@ -282,19 +302,11 @@ public class Service {
     private void readCourseFile(String file) {
         try {
             Files.lines(Paths.get(file))
-                .map(line -> {
-                    //System.out.println(line);
-                    return line.split(";");})
-                .map(parts -> {
-                    //System.out.println(parts[0] + " " + parts[1] + " " + parts[2]);
-                    return new Course(parts[0], Integer.valueOf(parts[1]), Integer.valueOf(parts[2]));})
-                .forEach(course -> {
-                    //System.out.println(course.getName());
-                    //System.out.println(course);
-                    coursesFromFile.add(course);});
+                .map(line -> line.split(";"))
+                .map(parts -> new Course(parts[0], Integer.valueOf(parts[1]), Integer.valueOf(parts[2])))
+                .forEach(course -> coursesFromFile.add(course));
         } catch (Exception e) {
-            System.out.println("Virhe: " + e.getMessage());
-            e.printStackTrace();
+
         }
         
         coursesFromFile.sort((course1, course2) -> (course1.getName().compareTo(course2.getName())));

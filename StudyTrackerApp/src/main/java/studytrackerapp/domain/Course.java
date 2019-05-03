@@ -82,11 +82,4 @@ public class Course {
         String courseString = name + " " + compulsoryString + " " + points + " op";
         return courseString;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    
 }

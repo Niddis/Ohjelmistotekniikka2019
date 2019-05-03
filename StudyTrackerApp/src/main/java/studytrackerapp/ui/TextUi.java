@@ -120,7 +120,7 @@ public class TextUi {
             courses = service.listCoursesByUser();
             printCourses();
             System.out.println("");
-            System.out.println("Suoritettuja opintoja yhteensä " + service.sumPoints() + " op.");
+            System.out.println("Suoritettuja opintoja yhteensä " + service.getPointsSum() + " op.");
         }
     }
     
