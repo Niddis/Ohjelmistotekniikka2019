@@ -9,13 +9,13 @@ public class Course {
     private int points;
     private User user;
 
-    public Course(int id, String name, int compulsory, int points, User user) {
-        this.id = id;
+    public Course(String name, int compulsory, int points) {
+        //this.id = id;
         this.name = name;
         this.done = 0;
         this.compulsory = compulsory;
         this.points = points;
-        this.user = user;
+        //this.user = user;
     }
 
     public Course(int id, String name, int done, int compulsory, int points, User user) {
@@ -70,5 +70,23 @@ public class Course {
     public void setUser(User user) {
         this.user = user;
     }
+
+    @Override
+    public String toString() {
+        String compulsoryString;
+        if (compulsory == 1) {
+            compulsoryString = "pakollinen";
+        } else {
+            compulsoryString = "valinnainen"; 
+        }
+        String courseString = name + " " + compulsoryString + " " + points + " op";
+        return courseString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     
 }

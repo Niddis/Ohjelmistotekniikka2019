@@ -11,5 +11,6 @@
 | 25.4. | 1,5      | kurssin pakollisuuden ja opintopisteiden muuttaminen, käyttöohje
 | 26.4. | 5,5      | koodin refraktorointia, testien laajennusta, javadoc ja arkkitehtuurikuvauksen päivittäminen
 | 30.4. | 3,5      | graafisen käyttöliittymän laajentaminen
-| 2.5.  | 3        | graafisen käyttöliittymän ja service-luokan laajentaminen, koodin refraktorointia  
-| yht.  | 30,5     |
+| 2.5.  | 3        | graafisen käyttöliittymän ja service-luokan laajentaminen, koodin refraktorointia
+| 3.5.  | 3        | config.properties -tiedosto, olemassa olevan kurssitiedoston lukeminen, kurssien järjestäminen
+| yht.  | 33,5     |

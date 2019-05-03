@@ -21,7 +21,7 @@ public class SqlUserDaoTest {
     
     @Before
     public void setUp() throws Exception {
-        database = new Database("jdbc:sqlite:user_test.db");
+        database = new Database("jdbc:sqlite:sta_test.db");
 
         database.init();
         dao = new SqlUserDao(database);

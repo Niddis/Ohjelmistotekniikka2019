@@ -1,5 +1,7 @@
 package studytrackerapp.domain;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ public class Service {
     private SqlCourseDao courseDao;
     private Database database;
     private List<Course> courses;
+    private List<Course> coursesFromFile;
     private List<User> users;
 
     public Service(Database database) {
@@ -22,6 +25,16 @@ public class Service {
         this.courseDao = new SqlCourseDao(database);
         this.courses = new ArrayList<>();
         this.users = new ArrayList<>();
+    }
+
+    public Service(Database database, String coursesFile) {
+        this.database = database;
+        this.userDao = new SqlUserDao(database);
+        this.courseDao = new SqlCourseDao(database);
+        this.courses = new ArrayList<>();
+        this.users = new ArrayList<>();
+        this.coursesFromFile = new ArrayList<>();
+        readCourseFile(coursesFile);
     }
     
     public User getLoggedUser() {
@@ -39,6 +52,10 @@ public class Service {
 
     public List<Course> getCourses() {
         return courses;
+    }
+
+    public List<Course> getCoursesFromFile() {
+        return coursesFromFile;
     }
     
     /**
@@ -97,8 +114,8 @@ public class Service {
      * @param points kurssista saatavat opintopisteet
      * @return true, jos kurssin luominen onnistuu, muuten false
      */
-    public boolean createNewCourse(int id, String name, int compulsory, int points) {
-        Course course = new Course(id, name, compulsory, points, loggedIn);
+    public boolean createNewCourse(String name, int compulsory, int points) {
+        Course course = new Course(0, name, 0, compulsory, points, loggedIn);
         if (loggedIn == null) {
             return false;
         }
@@ -241,6 +258,18 @@ public class Service {
         return sum;
     }
     
+    public void sortCoursesList(String sorter) {
+        if (sorter.equals("nimi")) {
+            courses.sort((course1, course2) -> course1.getName().compareTo(course2.getName()));
+        } else if (sorter.equals("suoritettu")) {
+            courses.sort((course1, course2) -> course1.getDone() - course2.getDone());
+        } else if (sorter.equals("pakollinen")) {
+            courses.sort((course1, course2) -> course1.getCompulsory() - course2.getCompulsory());
+        } else {
+            courses.sort((course1, course2) -> course1.getPoints() - course2.getPoints());
+        }
+    }
+    
     private Course findCourse(int id) {
         for (Course course: courses) {
             if (course.getId() == id) {
@@ -248,5 +277,26 @@ public class Service {
             }
         }
         return null;
+    }
+    
+    private void readCourseFile(String file) {
+        try {
+            Files.lines(Paths.get(file))
+                .map(line -> {
+                    //System.out.println(line);
+                    return line.split(";");})
+                .map(parts -> {
+                    //System.out.println(parts[0] + " " + parts[1] + " " + parts[2]);
+                    return new Course(parts[0], Integer.valueOf(parts[1]), Integer.valueOf(parts[2]));})
+                .forEach(course -> {
+                    //System.out.println(course.getName());
+                    //System.out.println(course);
+                    coursesFromFile.add(course);});
+        } catch (Exception e) {
+            System.out.println("Virhe: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        coursesFromFile.sort((course1, course2) -> (course1.getName().compareTo(course2.getName())));
     }
 }

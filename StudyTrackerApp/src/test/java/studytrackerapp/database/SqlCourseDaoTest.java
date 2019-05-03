@@ -24,7 +24,7 @@ public class SqlCourseDaoTest {
     
     @Before
     public void setUp() throws Exception {
-        database = new Database("jdbc:sqlite:course_test.db");
+        database = new Database("jdbc:sqlite:sta_test.db");
 
         database.init();
         
@@ -32,12 +32,12 @@ public class SqlCourseDaoTest {
         courseDao = new SqlCourseDao(database);
         
         user = userDao.create(new User(1, "Terhi Testaaja", "Terhi", "Testaaja"));
-        courseDao.create(new Course(0, "Ohpe", 1, 5, user), user);
+        courseDao.create(new Course(0, "Ohpe", 0, 1, 5, user), user);
     }
     
     @Test
     public void newCourseIsCreated() throws SQLException {
-        Course course = new Course(0, "Ohte", 1, 5, user);
+        Course course = new Course(0, "Ohte", 0, 1, 5, user);
         Course returnedCourse = courseDao.create(course, user);
         assertEquals("Ohte", returnedCourse.getName());
     }

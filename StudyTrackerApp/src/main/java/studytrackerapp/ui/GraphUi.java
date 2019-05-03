@@ -1,7 +1,9 @@
 package studytrackerapp.ui;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -29,9 +31,15 @@ public class GraphUi extends Application {
     @Override
     public void init() throws Exception {
         this.courseNodes = new VBox(10);
-        this.database = new Database("jdbc:sqlite:sta.db");
+        
+        Properties properties = new Properties();
+        properties.load(new FileInputStream("config.properties"));
+        String databaseAddress = properties.getProperty("databaseAddress");
+        String coursesFile = properties.getProperty("coursesFile");
+        
+        this.database = new Database(databaseAddress);
         database.init();
-        this.service = new Service(database);
+        this.service = new Service(database, coursesFile);
         
     }
 
@@ -143,6 +151,18 @@ public class GraphUi extends Application {
         BorderPane mainPane = new BorderPane(coursesScrollbar);
         coursesScene = new Scene(mainPane, 400, 250);
         
+        ToggleGroup selectSorterGroup = new ToggleGroup();
+        RadioButton nameButton = new RadioButton("nimi");
+        RadioButton doneButton = new RadioButton("suoritettu");
+        RadioButton compulsoryButton = new RadioButton("pakollinen");
+        RadioButton pointsButton = new RadioButton("pisteet");
+        nameButton.setToggleGroup(selectSorterGroup);
+        doneButton.setToggleGroup(selectSorterGroup);
+        compulsoryButton.setToggleGroup(selectSorterGroup);
+        pointsButton.setToggleGroup(selectSorterGroup);
+        nameButton.setSelected(true);
+        
+        
         Button createCourseButton = new Button("lisää kurssi");
         createCourseButton.setOnAction(e -> {
             stage.setScene(createCourse(stage));
@@ -152,19 +172,35 @@ public class GraphUi extends Application {
             service.logout();
             stage.setScene(loginScene);
         });
+        Button sortButton = new Button("järjestä");
+        sortButton.setOnAction(e -> {
+            RadioButton selected = (RadioButton) selectSorterGroup.getSelectedToggle();
+            service.sortCoursesList(selected.getText());
+            updateCourseList(stage);
+        });
         
+        HBox selectSorterPane = new HBox(5);
+        selectSorterPane.getChildren().addAll(nameButton, doneButton, compulsoryButton, pointsButton, sortButton);
         //courseNodes = new VBox(10);
         //updateCourseList(primary);
         HBox buttons = new HBox();
         buttons.getChildren().addAll(createCourseButton, logoutButton);
         coursesScrollbar.setContent(courseNodes);
         mainPane.setBottom(buttons);
+        mainPane.setTop(selectSorterPane);
         return coursesScene;
     }
     
     private Scene createCourse(Stage stage) {
         GridPane newCoursePane = new GridPane();
         newCoursePane.setPadding(new Insets(10));
+        
+        ChoiceBox chooseCourse = new ChoiceBox();
+        for (Course course: service.getCoursesFromFile()) {
+            chooseCourse.getItems().add(course);
+        }
+        
+        
         
         Label newCourseNameLabel = new Label("Nimi");
         Label newCoursePointsLabel = new Label("Opintopisteet");
@@ -196,7 +232,7 @@ public class GraphUi extends Application {
                 points = Integer.parseInt(newCoursePointsField.getText());
                 //System.out.println(points);
                 if (name.length() != 0) {
-                    service.createNewCourse(0, name, compulsory, points);
+                    service.createNewCourse(name, compulsory, points);
                     updateCourseList(stage);
                     stage.setScene(coursesScene);
                 } else {
@@ -209,6 +245,14 @@ public class GraphUi extends Application {
             
             //System.out.println(selected.getText());
         });
+        Button chooseCourseButton = new Button("Valitse kurssi");
+        chooseCourseButton.setOnAction(e -> {
+            Course selectedCourse = (Course) chooseCourse.getValue();
+            System.out.println("nimi: " + selectedCourse.getName());
+            boolean success = service.createNewCourse(selectedCourse.getName(), selectedCourse.getCompulsory(), selectedCourse.getPoints());
+            updateCourseList(stage);
+            stage.setScene(coursesScene);
+        });
         Button backToMainSceneButton = new Button("Takaisin");
         backToMainSceneButton.setOnAction(e -> {
             stage.setScene(coursesScene);
@@ -220,10 +264,11 @@ public class GraphUi extends Application {
         newCoursePane.addRow(3, newCourseCompulsoryLabel, selectButtonsPane);
         newCoursePane.add(createNewCourseButton, 1, 4);
         newCoursePane.add(backToMainSceneButton, 1, 5);
+        newCoursePane.addRow(6, chooseCourseButton, chooseCourse);
         newCoursePane.setVgap(15);
         newCoursePane.setHgap(10);
         
-        newCourseScene = new Scene(newCoursePane, 400, 250);
+        newCourseScene = new Scene(newCoursePane, 400, 350);
         return newCourseScene;
     }
     

@@ -87,7 +87,7 @@ public class SqlCourseDao implements CourseDao {
             }
             //User user = userDao.findById(result.getInt("user_id"));
             
-            return new Course(result.getInt("id"), result.getString("name"), result.getInt("compulsory"), result.getInt("points"), user);
+            return new Course(result.getInt("id"), result.getString("name"), result.getInt("done"), result.getInt("compulsory"), result.getInt("points"), user);
         }
     }
     /**

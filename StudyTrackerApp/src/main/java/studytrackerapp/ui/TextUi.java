@@ -111,7 +111,7 @@ public class TextUi {
             }
             System.out.print("Opintopisteet: ");
             int points = Integer.parseInt(scanner.nextLine());
-            service.createNewCourse(0, name, compulsory, points);
+            service.createNewCourse(name, compulsory, points);
         }
     }
     

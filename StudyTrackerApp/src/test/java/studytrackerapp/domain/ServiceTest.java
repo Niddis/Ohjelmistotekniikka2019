@@ -26,7 +26,7 @@ public class ServiceTest {
     
     @Before
     public void setUp() throws Exception {
-        database = new Database("jdbc:sqlite:service_test.db");
+        database = new Database("jdbc:sqlite:sta_test.db");
 
         database.init();
         userDao = new SqlUserDao(database);
@@ -57,7 +57,7 @@ public class ServiceTest {
     public void newCourseIsCreated() {
         service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
         service.login("Terhi", "Testaaja");
-        boolean success = service.createNewCourse(0, "Ohte", 0, 5);
+        boolean success = service.createNewCourse("Ohte", 0, 5);
         assertEquals(true, success);
     }
     
@@ -65,7 +65,7 @@ public class ServiceTest {
     public void existingCourseIsDeleted() {
         service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
         service.login("Terhi", "Testaaja");
-        service.createNewCourse(0, "Ohte", 0, 5);
+        service.createNewCourse("Ohte", 0, 5);
         boolean success = service.deleteCourse(1);
         assertEquals(true, success);
     }
@@ -74,7 +74,7 @@ public class ServiceTest {
     public void existingCoursenameIsUpdated() {
         service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
         service.login("Terhi", "Testaaja");
-        service.createNewCourse(0, "Ohte", 0, 5);       
+        service.createNewCourse("Ohte", 0, 5);       
         boolean success = service.updateCourseName(1, "Ohja");
         assertEquals(true, success);
     }
