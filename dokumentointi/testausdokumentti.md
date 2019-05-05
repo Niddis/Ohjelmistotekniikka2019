@@ -14,6 +14,12 @@ SqlUserDao- ja SqlCourseDao -luokat käyttävät samaa testitietokantaa kuin sov
 
 ### Testauskattavuus
 
+Testauksen rivikattavuus on 77 % ja haaraumakattavuus 75 %. Käyttöliittymät eivät ole mukana testikattavuudessa.
+
+<img src="https://raw.githubusercontent.com/Niddis/Ohjelmistotekniikka2019/master/dokumentointi/kuvat/Jacoco.png">
+
+Testauksen ulkopuolelle jäävät Service -luokan toinen konstruktori ja readCourseFile -metodi sekä esim. sellaiset tapaukset, jossa tietokannan muokkaaminen päättyy virheeseen.
+
 ## Järjestelmätestaus
 
 ### Asennus ja konfigurointi

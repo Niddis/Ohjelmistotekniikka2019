@@ -1,6 +1,6 @@
 # Käyttöohje
 
-Lataa tiedosto sta_v2.jar. Jos haluat käyttää tekstikäyttöliittymää, joudut kopioimaan sovelluksen lähdekoodin ja käynnistämään ohjelman esim. komentoriviltä.
+Lataa tiedosto sta_v3.jar. Jos haluat käyttää tekstikäyttöliittymää, joudut kopioimaan sovelluksen lähdekoodin ja käynnistämään ohjelman esim. komentoriviltä.
 
 ## Konfigurointi
 
@@ -28,7 +28,7 @@ Tällöin käyttäjä voi uutta kurssia lisätessään valita kurssin suoraan li
 
 Sovellus käynnistetään komennolla
 ```
-java -jar sta_v2.jar
+java -jar sta_v3.jar
 ```
 
 ## Graafinen käyttöliittymä

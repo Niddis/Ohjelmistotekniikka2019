@@ -4,7 +4,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import studytrackerapp.domain.User;
-
+/**
+ * Luokka tarjoaa erilaisia metodeja tietokannassa olevan User-taulun käsittelyyn.
+ */
 public class SqlUserDao implements UserDao {
     private Database database;
 
@@ -54,7 +56,11 @@ public class SqlUserDao implements UserDao {
             return new User(result.getInt("id"), result.getString("name"), result.getString("username"), result.getString("password"));
         }
     }
-
+    /**
+     * Metodi hakee kaikki käyttäjät tietokannasta.
+     * @return lista, joka sisältää User-olioita
+     * @throws SQLException 
+     */
     @Override
     public List<User> getAll() throws SQLException {
         List<User> users = new ArrayList<>();

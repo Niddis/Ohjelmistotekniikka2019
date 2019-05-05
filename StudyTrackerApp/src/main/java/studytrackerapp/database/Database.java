@@ -3,7 +3,9 @@ package studytrackerapp.database;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Luokka sisältää tietokannan hallinointiin vaadittavia metodeja.
+ */
 public class Database {
     private String databaseAddress;
 
@@ -33,7 +35,10 @@ public class Database {
             //System.out.println(t.getMessage());
         }
     }
-    
+    /**
+     * Metodi sisältää tietokannan alustamiseen vaadittavat sql-lauseet.
+     * @return sql-lauseita sisältävä lista
+     */
     private List<String> sqlStrings() {
         ArrayList<String> strings = new ArrayList<>();
         strings.add("CREATE TABLE IF NOT EXISTS User (id integer PRIMARY KEY, name varchar(50), username varchar(10), password varchar(15));");

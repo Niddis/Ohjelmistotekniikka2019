@@ -19,29 +19,29 @@ Sovelluksen aloitusnäkymässä käyttäjä voi valita seitsemästä vaihtoehdos
 
 ### Ennen kirjautumista
 * käyttäjä voi luoda uuden käyttäjän, jolla on nimi, käyttäjätunnus ja salasana
- * käyttäjätunnuksen tulee olla 2-10 merkkiä pitkä ja uniikki
- * nimen tulee olla 2-50 merkkiä pitkä
- * salasanan tulee olla 5-15 merkkiä pitkä
+  * käyttäjätunnuksen tulee olla 2-10 merkkiä pitkä ja uniikki
+  * nimen tulee olla 2-50 merkkiä pitkä
+  * salasanan tulee olla 5-15 merkkiä pitkä
 * käyttäjä voi kirjautua järjestelmään
- * kirjautuminen onnistuu, jos käyttäjätunnus ja salasana ovat olemassa ja ne vastaavat tietokannasta löytyvää käyttäjätunnusta ja salasanaa
- * kirjautumisen epäonnistuessa sovellus ilmoittaa virheellisestä käyttäjätunnuksesta tai salasanasta
+  * kirjautuminen onnistuu, jos käyttäjätunnus ja salasana ovat olemassa ja ne vastaavat tietokannasta löytyvää käyttäjätunnusta ja salasanaa
+  * kirjautumisen epäonnistuessa sovellus ilmoittaa virheellisestä käyttäjätunnuksesta tai salasanasta
 
 ### Kirjautumisen jälkeen
 * käyttäjä näkee lisäämänsä kurssit
- * jokaisesta kurssista näytetään nimi, onko kurssi suoritettu vai suorittamatta, onko kurssi pakollinen vai valinnainen ja opintopistemäärä
+  * jokaisesta kurssista näytetään nimi, onko kurssi suoritettu vai suorittamatta, onko kurssi pakollinen vai valinnainen ja opintopistemäärä
 * käyttäjä voi järjestää kurssinäkymän nimen, suoritustiedon, pakollisuustiedon tai opintopisteiden mukaan
 * käyttäjä voi luoda uuden kurssin
- * kurssin voi luoda joko syöttämällä itse kurssin tiedot (nimi, pakollisuustieto ja opintopisteet) tai valitsemalla kurssin valmiilta listalta (jos lista on olemassa)
- * kurssin nimen tulee olla 1-30 merkkiä pitkä
- * opintopisteiden tulee olla kokonaisluku väliltä 0-100
+  * kurssin voi luoda joko syöttämällä itse kurssin tiedot (nimi, pakollisuustieto ja opintopisteet) tai valitsemalla kurssin valmiilta listalta (jos lista on olemassa)
+  * kurssin nimen tulee olla 1-30 merkkiä pitkä
+  * opintopisteiden tulee olla kokonaisluku väliltä 0-100
 * käyttäjä voi päivittää kurssin tietoja
- * käyttäjä voi muuttaa kurssin nimeä, suoritustietoa, pakollisuustietoa ja opintopisteitä
+  * käyttäjä voi muuttaa kurssin nimeä, suoritustietoa, pakollisuustietoa ja opintopisteitä
 * käyttäjä voi poistaa kurssin
 * käyttäjä voi kirjautua ulos järjestelmästä
 
 ## Jatkokehitysideoita
 * sovellukseen voisi lisätä mahdollisuuden omien tietojen hallintaan, esim. salasanan muuttamisen
 * salasanojen parempi suojaus
- * nyt salasanat tallennetaan suojaamattomina suoraan tietokantaan
+  * nyt salasanat tallennetaan suojaamattomina suoraan tietokantaan
 * sovelluksen tekstikäyttöliittymän laajennus
- * nyt tekstikäyttöliittymästä puuttuu mahdollisuus mm. kurssien järjestämiseen ja valmiin kurssilistan käyttämiseen
+  * nyt tekstikäyttöliittymästä puuttuu mahdollisuus mm. kurssien järjestämiseen ja valmiin kurssilistan käyttämiseen
