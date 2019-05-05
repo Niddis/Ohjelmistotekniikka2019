@@ -37,7 +37,7 @@ public class SqlUserDaoTest {
     
     @Test
     public void nonExistingUserIsFound() throws SQLException {
-        User user = dao.findByUserName("notHere");
+        User user = dao.getOne("notHere");
         assertEquals(null, user);
     }
     

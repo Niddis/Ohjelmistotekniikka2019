@@ -12,11 +12,15 @@ Sovelluksen käyttäjät voivat pitää kirjaa käymistään kursseista.
 
 [Arkkitehtuurikuvaus](../master/dokumentointi/arkkitehtuuri.md)
 
+[Testausdokumentti](../master/dokumentointi/testausdokumentti.md)
+
 ### Releaset
 
 [Viikko 5](https://github.com/Niddis/Ohjelmistotekniikka2019/releases/tag/viikko5)
 
 [Viikko 6](https://github.com/Niddis/Ohjelmistotekniikka2019/releases/tag/viikko6)
+
+[Loppupalautus](https://github.com/Niddis/Ohjelmistotekniikka2019/releases/tag/Loppupalautus)
 
 ### Komentorivitoiminnot
 #### Testaus
@@ -30,11 +34,6 @@ mvn test jacoco:report
 ```
 Kattavuusraporttia voi tarkastella avaamalla selaimella tiedoston *target/site/jacoco/index.html*
 
-#### Ohjelman suorittaminen
-Ohjelma suoritetaan komennolla
-```
-mvn compile exec:java -Dexec.mainClass=studytrackerapp.Main
-```
 #### Suoritettavan jarin generointi
 Komento
 ```

@@ -1,20 +1,17 @@
 package studytrackerapp.database;
 
-import java.sql.SQLException;
 import java.util.List;
 import studytrackerapp.domain.Course;
 import studytrackerapp.domain.User;
 
 public interface CourseDao {
-    Course create(Course course, User user) throws SQLException;
+    Course create(Course course, User user) throws Exception;
     
-    List<Course> getAll() throws SQLException;
+    List<Course> getAllByUser(int userId) throws Exception;
     
-    List<Course> getAllByUser(int userId) throws SQLException;
+    Course getOne(String name, User user) throws Exception;
     
-    Course getOne(String name, User user) throws SQLException;
+    void update(int userId, Course course) throws Exception;
     
-    void update(int userId, Course course) throws SQLException;
-    
-    void delete(int id, int userId) throws SQLException;
+    void delete(int id, int userId) throws Exception;
 }

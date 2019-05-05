@@ -5,6 +5,8 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.property.SimpleIntegerProperty;
+import studytrackerapp.database.CourseDao;
 import studytrackerapp.database.Database;
 import studytrackerapp.database.SqlCourseDao;
 import studytrackerapp.database.SqlUserDao;
@@ -12,29 +14,28 @@ import studytrackerapp.database.UserDao;
 
 public class Service {
     private User loggedIn;
-    private SqlUserDao userDao;
-    private SqlCourseDao courseDao;
-    private Database database;
+    private UserDao userDao;
+    private CourseDao courseDao;
     private List<Course> courses;
     private List<Course> coursesFromFile;
     private List<User> users;
+    private SimpleIntegerProperty sumValue;
     private int pointsSum;
 
-    public Service(Database database) {
-        this.database = database;
-        this.userDao = new SqlUserDao(database);
-        this.courseDao = new SqlCourseDao(database);
+    public Service(UserDao userdao, CourseDao coursedao) {
+        this.userDao = userdao;
+        this.courseDao = coursedao;
         this.courses = new ArrayList<>();
         this.users = new ArrayList<>();
     }
 
-    public Service(Database database, String coursesFile) {
-        this.database = database;
-        this.userDao = new SqlUserDao(database);
-        this.courseDao = new SqlCourseDao(database);
+    public Service(UserDao userdao, CourseDao coursedao, String coursesFile) {
+        this.userDao = userdao;
+        this.courseDao = coursedao;
         this.courses = new ArrayList<>();
         this.users = new ArrayList<>();
         this.coursesFromFile = new ArrayList<>();
+        this.sumValue = new SimpleIntegerProperty(0);
         readCourseFile(coursesFile);
     }
     
@@ -62,6 +63,11 @@ public class Service {
     public int getPointsSum() {
         return pointsSum;
     }
+
+    public SimpleIntegerProperty getSumValue() {
+        sumValue.set(pointsSum);
+        return sumValue;
+    }
     
     /**
      * Metodi kirjaa käyttäjän sisään ohjelmaan.
@@ -72,7 +78,7 @@ public class Service {
     public boolean login(String username, String password) {
         User user;
         try {
-            user = userDao.findByUserName(username);
+            user = userDao.getOne(username);
         } catch (Exception e) {
             return false;
         }
@@ -145,6 +151,7 @@ public class Service {
         } catch (Exception e) {
             return false;
         }
+        sumPoints();
         return true;
     }
     /**
@@ -170,7 +177,7 @@ public class Service {
      * @param id päivitettävän kurssin id
      * @return true, jos päivitys onnistuu, muuten false
      */
-    public boolean setCourseDone(int id) {
+    public boolean updateDone(int id) {
         Course course = findCourse(id);
         if (course.getDone() == 1) {
             course.setDone(0);
@@ -272,6 +279,7 @@ public class Service {
                 sum += course.getPoints();
             }
         }
+
         pointsSum = sum;
     }
     /**

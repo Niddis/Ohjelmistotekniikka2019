@@ -1,22 +1,16 @@
 package studytrackerapp.domain;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import studytrackerapp.database.Database;
 import studytrackerapp.database.SqlCourseDao;
 import studytrackerapp.database.SqlUserDao;
-import studytrackerapp.domain.User;
 
 public class ServiceTest {
     SqlUserDao userDao;
@@ -31,7 +25,7 @@ public class ServiceTest {
         
         userDao = new SqlUserDao(database);
         courseDao = new SqlCourseDao(database);
-        service = new Service(database);
+        service = new Service(userDao, courseDao);
     }
     
     @Test
@@ -110,7 +104,7 @@ public class ServiceTest {
         service.createNewUser(0, "Terhi Testaaja", "Terhi", "Testaaja");
         service.login("Terhi", "Testaaja");
         service.createNewCourse("Ohte", 0, 5);       
-        boolean success = service.setCourseDone(1);
+        boolean success = service.updateDone(1);
         assertEquals(true, success);
     }
     
@@ -164,7 +158,7 @@ public class ServiceTest {
         service.login("Terhi", "Testaaja");
         service.createNewCourse("Fullstack", 0, 10);
         service.createNewCourse("Ohte", 1, 5);
-        service.setCourseDone(2);
+        service.updateDone(2);
         service.sortCoursesList("suoritettu");
         assertEquals("Ohte", service.getCourses().get(0).getName());
     }

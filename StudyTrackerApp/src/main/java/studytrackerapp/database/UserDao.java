@@ -1,13 +1,12 @@
 package studytrackerapp.database;
 
-import java.sql.*;
-import java.util.*;
+import java.util.List;
 import studytrackerapp.domain.User;
 
 public interface UserDao {
-    User create(User user) throws SQLException;
+    User create(User user) throws Exception;
     
-    User findByUserName(String username) throws SQLException;
+    User getOne(String username) throws Exception;
     
-    List<User> getAll() throws SQLException;
+    List<User> getAll() throws Exception;
 }

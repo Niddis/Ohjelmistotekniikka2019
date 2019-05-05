@@ -43,10 +43,6 @@ public class SqlCourseDao implements CourseDao {
         return getOne(course.getName(), user);
     }
 
-    @Override
-    public List<Course> getAll() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     /**
      * Metodi hakee tietokannasta kaikki kirjautuneena olevan käyttäjän kurssit.
      * @param userId kirjautuneen käyttäjän id

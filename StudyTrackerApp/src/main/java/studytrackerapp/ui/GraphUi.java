@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.stage.Stage;
@@ -13,6 +14,8 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import studytrackerapp.database.Database;
+import studytrackerapp.database.SqlCourseDao;
+import studytrackerapp.database.SqlUserDao;
 import studytrackerapp.domain.Course;
 import studytrackerapp.domain.Service;
 
@@ -25,7 +28,6 @@ public class GraphUi extends Application {
     private VBox courseNodes;
     private Service service;
     private Database database;
-    private Label message = new Label();
     private Course currentCourse;
 
     @Override
@@ -39,7 +41,9 @@ public class GraphUi extends Application {
         
         this.database = new Database(databaseAddress);
         database.init();
-        this.service = new Service(database, coursesFile);
+        SqlUserDao userdao = new SqlUserDao(database);
+        SqlCourseDao coursedao = new SqlCourseDao(database);
+        this.service = new Service(userdao, coursedao, coursesFile);
         
     }
 
@@ -64,12 +68,12 @@ public class GraphUi extends Application {
             String password = passwordInput.getText();
             boolean loginOk = service.login(username, password);
             if (loginOk) {
-                message.setText("");
                 service.listCoursesByUser();
                 updateCourseList(primary);
                 primary.setScene(listCourses(primary));
                 usernameInput.setText("");
                 passwordInput.setText("");
+                loginMessage.setText("");
             } else {
                 loginMessage.setText("Virheellinen käyttäjätunnus tai salasana.");
                 loginMessage.setTextFill(Color.RED);
@@ -80,7 +84,7 @@ public class GraphUi extends Application {
             primary.setScene(createUser(primary));
         });
 
-        loginPane.add(loginMessage, 1, 0, 3, 1);
+        loginPane.add(loginMessage, 0, 0, 3, 1);
         loginPane.addRow(1, usernameLabel, usernameInput);
         loginPane.addRow(2, passwordLabel, passwordInput);
         loginPane.add(loginButton, 1, 3);
@@ -109,10 +113,12 @@ public class GraphUi extends Application {
         Label newNameInputInfo = new Label("Nimen on oltava 2-50 merkkiä pitkä.");
         Label newUsernameInputInfo = new Label("Käyttäjätunnuksen on oltava 2-10 merkkiä pitkä.");
         Label newPasswordInputInfo = new Label("Salasanan on oltava 5-15 merkkiä pitkä.");
+        Label newUserMessage = new Label();
         TextField newNameInput = new TextField();
         TextField newUsernameInput = new TextField();
         PasswordField newPasswordInput = new PasswordField();
         PasswordField newPasswordInput2 = new PasswordField();
+        
         Button createNewUserButton = new Button("Luo uusi käyttäjä");
         createNewUserButton.setOnAction(e -> {
             String name = newNameInput.getText().trim();
@@ -120,21 +126,24 @@ public class GraphUi extends Application {
             String password = newPasswordInput.getText().trim();
             String password2 = newPasswordInput2.getText().trim();
             if (name.length() < 2 || name.length() > 50 || username.length() < 2 || username.length() > 10 || password.length() < 5 || password.length() > 15) {
-                message.setText("Nimen, käyttäjätunnuksen tai salasanan pituus ei kelpaa.");
-                message.setTextFill(Color.RED);
+                newUserMessage.setText("Nimen, käyttäjätunnuksen tai salasanan pituus ei kelpaa.");
+                newUserMessage.setTextFill(Color.RED);
             } else if (!password.equals(password2)) {
-                message.setText("Salasanakentät eivät vastanneet toisiaan. Anna salasana uudestaan.");
+                newUserMessage.setText("Salasanakentät eivät vastanneet toisiaan. Anna salasana uudestaan.");
                 newPasswordInput.setText("");
                 newPasswordInput2.setText("");
             } else {
                 boolean newUserOk = service.createNewUser(0, newNameInput.getText(), newUsernameInput.getText(), newPasswordInput.getText());
                 if (newUserOk) {
-                    message.setText("Uusi käyttäjä luotu");
-                    message.setTextFill(Color.GREEN);
                     stage.setScene(loginScene);
+                    newNameInput.setText("");
+                    newUsernameInput.setText("");
+                    newPasswordInput.setText("");
+                    newPasswordInput2.setText("");
+                    newUserMessage.setText("");
                 } else {
-                    message.setText("Käyttäjätunnus on jo käytössä.");
-                    message.setTextFill(Color.RED);
+                    newUserMessage.setText("Käyttäjätunnus on jo käytössä.");
+                    newUserMessage.setTextFill(Color.RED);
                 }
             }
             
@@ -144,7 +153,7 @@ public class GraphUi extends Application {
             stage.setScene(loginScene);
         });
         
-        newUserPane.add(message, 0, 0, 3, 1);
+        newUserPane.add(newUserMessage, 0, 0, 3, 1);
         newUserPane.addRow(1, newNameLabel, newNameInput);
         newUserPane.add(newNameInputInfo, 1, 2);
         newUserPane.addRow(3, newUsernameLabel, newUsernameInput);
@@ -193,7 +202,8 @@ public class GraphUi extends Application {
             updateCourseList(stage);
         });
         
-        Label pointsSumLabel = new Label("Suoritettuja opintoja yhteensä ");
+        Label pointsSumLabel = new Label();
+        pointsSumLabel.textProperty().bind(Bindings.concat(" Suoritettuja opintoja yhteensä ", service.getSumValue(), " opintopistettä."));
         HBox selectSorterPane = new HBox(5);
         selectSorterPane.setPadding(new Insets(10));
         selectSorterPane.getChildren().addAll(nameButton, doneButton, compulsoryButton, pointsButton, sortButton);
@@ -247,15 +257,23 @@ public class GraphUi extends Application {
             if (isInputAnInteger(newCoursePointsField)) {
                 points = Integer.parseInt(newCoursePointsField.getText());
                 if (name.length() > 0 && name.length() <= 30 && points >= 0 && points <= 100) {
-                    service.createNewCourse(name, compulsory, points);
-                    updateCourseList(stage);
-                    stage.setScene(coursesScene);
+                    boolean success = service.createNewCourse(name, compulsory, points);
+                    if (success) {
+                        updateCourseList(stage);
+                        stage.setScene(coursesScene);
+                        newCourseNameField.setText("");
+                        newCoursePointsField.setText("");
+                        newCourseMessage.setText("");
+                    } else {
+                        newCourseMessage.setText("Tapahtui virhe.");
+                        newCourseMessage.setTextFill(Color.RED);
+                    }
                 } else {
                     newCourseMessage.setText("Kurssin nimi tai pisteet ei kelpaa.");
                     newCourseMessage.setTextFill(Color.RED);
                 }
             } else {
-                newCourseMessage.setText("Et antanut kokonaislukua");
+                newCourseMessage.setText("Opintopisteiden on oltava kokonaisluku.");
                 newCourseMessage.setTextFill(Color.RED);
                 newCoursePointsField.setText("");
             }
@@ -265,8 +283,13 @@ public class GraphUi extends Application {
         chooseCourseButton.setOnAction(e -> {
             Course selectedCourse = (Course) chooseCourse.getValue();
             boolean success = service.createNewCourse(selectedCourse.getName(), selectedCourse.getCompulsory(), selectedCourse.getPoints());
-            updateCourseList(stage);
-            stage.setScene(coursesScene);
+            if (success) {
+                updateCourseList(stage);
+                stage.setScene(coursesScene);
+            } else {
+                newCourseMessage.setText("Tapahtui virhe.");
+                newCourseMessage.setTextFill(Color.RED);
+            }
         });
         Button backToMainSceneButton = new Button("Takaisin");
         backToMainSceneButton.setOnAction(e -> {
@@ -276,15 +299,13 @@ public class GraphUi extends Application {
         newCoursePane.add(newCourseMessage, 0, 0, 3, 1);
         newCoursePane.add(chooseCourse, 1, 1);
         newCoursePane.add(chooseCourseButton, 1, 2);
-        //newCoursePane.addRow(1, chooseCourse, chooseCourseButton);
         newCoursePane.addRow(3, newCourseNameLabel, newCourseNameField);
         newCoursePane.add(newCourseNameInfo, 1, 4);
         newCoursePane.addRow(5, newCoursePointsLabel, newCoursePointsField);
         newCoursePane.add(newCoursePointsInfo, 1, 6);
         newCoursePane.addRow(7, newCourseCompulsoryLabel, selectButtonsPane);
-        //newCoursePane.addRow(7, createNewCourseButton, backToMainSceneButton);
         newCoursePane.add(createNewCourseButton, 1, 8);
-        newCoursePane.add(backToMainSceneButton, 2, 8);
+        newCoursePane.add(backToMainSceneButton, 1, 9);
         
         newCoursePane.setVgap(15);
         newCoursePane.setHgap(10);
@@ -384,9 +405,9 @@ public class GraphUi extends Application {
         updateCoursePane.add(updateCoursePointsInfo, 1, 4);
         updateCoursePane.addRow(5, updateCourseCompulsoryLabel, selectCompulsoryButtonsPane);
         updateCoursePane.addRow(6, updateCourseDoneLabel, selectDoneButtonsPane);
-        updateCoursePane.addRow(7, updateCourseButton, backToMainSceneButton);
-        //updateCoursePane.add(updateCourseButton, 1, 7);
-        //updateCoursePane.add(backToMainSceneButton, 1, 8);
+        //updateCoursePane.addRow(7, updateCourseButton, backToMainSceneButton);
+        updateCoursePane.add(updateCourseButton, 1, 7);
+        updateCoursePane.add(backToMainSceneButton, 1, 8);
         updateCoursePane.setVgap(15);
         updateCoursePane.setHgap(10);
         
@@ -435,11 +456,6 @@ public class GraphUi extends Application {
                 courseNodes.getChildren().add(createNode(course, stage));
             });
         }
-    }
-    
-    private Label updatePointsSumLabel() {
-        int sumPoints = service.getPointsSum();
-        return new Label("Suoritettuja opintoja yhteensä " + sumPoints + " op");
     }
     
     private boolean isInputAnInteger(TextField field) {

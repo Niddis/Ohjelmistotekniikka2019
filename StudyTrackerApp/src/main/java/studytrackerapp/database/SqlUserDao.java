@@ -19,7 +19,7 @@ public class SqlUserDao implements UserDao {
      */
     @Override
     public User create(User user) throws SQLException {
-        User byName = findByUserName(user.getUsername());
+        User byName = getOne(user.getUsername());
         if (byName != null) {
             return byName;
         }
@@ -32,7 +32,7 @@ public class SqlUserDao implements UserDao {
             
             stmt.executeUpdate();
         }
-        return findByUserName(user.getUsername());
+        return getOne(user.getUsername());
     }
     /**
      * Metodi hakee yhden käyttäjän tietokannasta käyttäjätunnuksen perusteella.
@@ -41,7 +41,7 @@ public class SqlUserDao implements UserDao {
      * @throws SQLException 
      */
     @Override
-    public User findByUserName(String username) throws SQLException {
+    public User getOne(String username) throws SQLException {
         try (Connection conn = database.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT id, name, username, password FROM User WHERE username = ?");
             stmt.setString(1, username);
