@@ -1,7 +1,6 @@
 package studytrackerapp;
 
 import java.io.FileInputStream;
-import java.sql.*;
 import java.util.Properties;
 import java.util.Scanner;
 import studytrackerapp.database.Database;
@@ -16,6 +15,7 @@ public class Main {
         Properties properties = new Properties();
         properties.load(new FileInputStream("config.properties"));
         String databaseAddress = properties.getProperty("databaseAddress");
+        
         Database database = new Database(databaseAddress);
         SqlUserDao userdao = new SqlUserDao(database);
         SqlCourseDao coursedao = new SqlCourseDao(database);

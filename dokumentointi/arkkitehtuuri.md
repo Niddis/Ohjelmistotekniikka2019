@@ -20,7 +20,7 @@ Sovelluksessa on kaksi ydinluokkaa User ja Course, jotka kuvaavat käyttäjiä j
 
 <img src="https://raw.githubusercontent.com/Niddis/Ohjelmistotekniikka2019/master/dokumentointi/kuvat/Ohte_userAndCourse.png">
 
-Luokasta Service  luotu olio vastaa toiminnallisista kokonaisuuksista ja uusien User- ja Course-olioiden luomisesta sekä toimii käyttöliittymän ja SqlUserDao- ja SqlCourseDao -luokkien välissä, niin että käyttöliittymä ei suoraan pääse käsiksi kyseisiin luokkiin tai päinvastoin. Service -luokan tarjoamia metodeja ovat mm.
+Luokasta Service luotu olio vastaa toiminnallisista kokonaisuuksista ja uusien User- ja Course-olioiden luomisesta sekä toimii käyttöliittymän ja SqlUserDao- ja SqlCourseDao -luokkien välissä, niin että käyttöliittymä ei suoraan pääse käsiksi kyseisiin luokkiin tai päinvastoin. Service -luokan tarjoamia metodeja ovat mm.
 
 * boolean login (String username, String password)
 * boolean createNewCourse(String name, int compulsory, int points)
@@ -31,11 +31,11 @@ Luokasta Service  luotu olio vastaa toiminnallisista kokonaisuuksista ja uusien 
 
 ## Tietojen pysyväistallennus
 
-Pakkauksen studytrackerapp.database luokat SqlUserDao ja SqlCourseDao toteuttavat UserDao- ja CourseDao -rajapinnat ja  vastaavat tietojen tallettamisesta Sqlite -tietokantaan.
+Pakkauksen studytrackerapp.database luokat SqlUserDao ja SqlCourseDao toteuttavat UserDao- ja CourseDao -rajapinnat ja  vastaavat tietojen tallettamisesta Sqlite -tietokantaan. Dao -luokat injektoidaan sovelluslogiikalle konstruktorikutsun yhteydessä.
 
 ### Tietokanta
 
-Luokka database vastaa tietokantayhteyden muodostamisesta ja tietokannan alustamisesta. Jos sovelluksen käynnistyshakemistossa ei käynnistyshetkellä ole olemassa olevaa tietokantaa, sellainen luodaan. Tietokantataulujen luomisessa käytetään seuraavia lauseita:
+Luokka Database vastaa tietokantayhteyden muodostamisesta ja tietokannan alustamisesta. Jos sovelluksen käynnistyshakemistossa ei käynnistyshetkellä ole olemassa olevaa tietokantaa, sellainen luodaan. Tietokantataulujen luomisessa käytetään seuraavia lauseita:
 ```
 CREATE TABLE IF NOT EXISTS User (id integer PRIMARY KEY, name varchar(50), username varchar(10), password varchar(15));
 CREATE TABLE IF NOT EXISTS Course (id integer PRIMARY KEY, user_id integer, name varchar(50), done integer, compulsory integer, points integer, FOREIGN KEY (user_id) REFERENCES User(id));

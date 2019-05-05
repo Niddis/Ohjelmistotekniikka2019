@@ -14,5 +14,5 @@
 | 2.5.  | 3        | graafisen käyttöliittymän ja service-luokan laajentaminen, koodin refraktorointia
 | 3.5.  | 6        | config.properties -tiedosto, olemassa olevan kurssitiedoston lukeminen, kurssien järjestäminen, testien laajentaminen
 | 4.5.  | 5        | dokumentaation päivitys
-| 5.5.  | 3        | koodin hienosäätöä ja dokumentaation päivitystä
-| yht.  | 44,5     |
+| 5.5.  | 5        | koodin hienosäätöä ja dokumentaation päivitystä
+| yht.  | 46,5     |

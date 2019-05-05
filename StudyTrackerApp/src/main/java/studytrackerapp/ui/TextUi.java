@@ -1,13 +1,13 @@
 package studytrackerapp.ui;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import studytrackerapp.database.CourseDao;
 import studytrackerapp.database.UserDao;
 import studytrackerapp.domain.Course;
 import studytrackerapp.domain.Service;
-
+/**
+ * Luokka sisältää sovelluksen tekstikäyttöliittymän.
+ */
 public class TextUi {
     private Scanner scanner;
     private Service service;
@@ -17,6 +17,10 @@ public class TextUi {
         this.service = new Service(userdao, coursedao);
     }
     
+    /**
+     * Metodi tulostaa sovelluksen käyttöohjeen ja kysyy seuraavaa komentoa.
+     * Komentoa kysytään niin kauan kuin sovellus on käynnissä.
+     */
     public void start() {
         System.out.println("Opintojen seurantasovellus");
         System.out.println("");
@@ -56,6 +60,11 @@ public class TextUi {
         }
     }
     
+    /**
+     * Metodi pyytää uuden käyttäjän nimeä, käyttäjätunnusta ja salasanaa. 
+     * Tiedot välitetään sovelluslogiin metodille parametreina ja käyttäjälle 
+     * kerrotaan (epä)onnistuneesta käyttäjän luomisesta.
+     */
     private void createUser() {
         System.out.print("Nimi: ");
         String name = scanner.nextLine();
@@ -71,6 +80,11 @@ public class TextUi {
         }
     }
     
+    /**
+     * Metodi pyytää käyttäjätunnusta ja salasanaa. Tiedot välitetään sovelluslogiikan 
+     * metodille parametreina ja (epä)onnistuneesta kirjautumisesta kerrotaan 
+     * käyttäjälle.
+     */
     private void loginUser() {
         System.out.print("Käyttäjätunnus: ");
         String username = scanner.nextLine();
@@ -79,11 +93,12 @@ public class TextUi {
         boolean success = service.login(username, password);
         if (success) {
             System.out.println("Sisäänkirjautuminen onnistui!");
+            service.listCoursesByUser();
         } else {
             System.out.println("Virheellinen käyttäjätunnus tai salasana.");
         }
     }
-    
+
     private void logoutUser() {
         if (service.getLoggedUser() != null) {
             service.logout();
@@ -92,7 +107,13 @@ public class TextUi {
             System.out.println("Et ole kirjautunut sisään.");
         }
     }
-
+    
+    /**
+     * Metodi pyytää uuden kurssin nimeä, pakollisuustietoa ja opintopisteitä.
+     * Tiedot välitetään sovelluslogiikan metodille parametreina ja 
+     * (epä)onnistuneesta kurssin lisäämisestä kerrotaan käyttäjälle. Metodi huolehtii myös 
+     * käyttäjän antaman syötteen validoinnista.
+     */
     private void createCourse() { 
         if (isUserLoggedIn()) {
             int compulsory = 0;
@@ -106,12 +127,31 @@ public class TextUi {
                     break;
                 }
             }
-            System.out.print("Opintopisteet: ");
-            int points = Integer.parseInt(scanner.nextLine());
-            service.createNewCourse(name, compulsory, points);
+            int points = 0;
+            while (true) {
+                System.out.print("Opintopisteet: ");
+                String pointsString = scanner.nextLine();
+                if (isInputAnInteger(pointsString)) {
+                    points = Integer.parseInt(pointsString);
+                    break;
+                } else {
+                    System.out.println("Anna opintopisteet kokonaislukuna.");
+                }
+            }
+            
+            boolean success = service.createNewCourse(name, compulsory, points);
+            if (success) {
+                System.out.println("Kurssi lisätty onnistuneesti.");
+            } else {
+                System.out.println("Tapahtui virhe. kurssin lisääminen epäonnistui.");
+            }
         }
     }
     
+    /**
+     * Metodi tulostaa näytölle kirjautuneen käyttäjän kaikki kurssit ja kertoo
+     * suoritettujen kurssien opintopisteiden yhteismäärän.
+     */
     private void listCoursesByUser() {
         if (isUserLoggedIn()) {
             printCourses();
@@ -120,12 +160,27 @@ public class TextUi {
         }
     }
     
+    /**
+     * Metodi pyytää poistettavan kurssin id:tä.
+     * Tieto välitetään sovelluslogiikan metodille parametrina ja 
+     * (epä)onnistuneesta kirjautumisesta kerrotaan käyttäjälle. Metodi huolehtii myös 
+     * käyttäjän antaman syötteen validoinnista.
+     */
     private void deleteCourse() {
         if (isUserLoggedIn()) {
             listCoursesByUser();
-            System.out.println("");
-            System.out.print("Anna poistettavan kurssin id: ");
-            int id = Integer.parseInt(scanner.nextLine());
+            System.out.println(""); 
+            int id = 0;
+            while (true) {
+                System.out.print("Anna poistettavan kurssin id: ");
+                String idString = scanner.nextLine();
+                if (isInputAnInteger(idString)) {
+                    id = Integer.parseInt(idString);
+                    break;
+                } else {
+                    System.out.println("Anna id kokonaislukuna.");
+                }
+            }
             boolean success = service.deleteCourse(id);
             if (success) {
                 System.out.println("Kurssi poistettu.");
@@ -135,14 +190,24 @@ public class TextUi {
         }
     }
     
+    /**
+     * Metodi pyytää päivitettävän kurssin id:tä, tulostaa käyttöohjeen ja 
+     * kysyy haluttua muokkaustoimenpidettä. 
+     */
     private void updateCourse() {
         if (isUserLoggedIn()) {
             listCoursesByUser();
             System.out.println("");
-            System.out.print("Anna päivitettävän kurssin id (0 peruuta): ");
-            int id = Integer.parseInt(scanner.nextLine());
-            if (id == 0) {
-                start();
+            int id = 0;
+            while (true) {
+                System.out.print("Anna päivitettävän kurssin id: ");
+                String idString = scanner.nextLine();
+                if (isInputAnInteger(idString)) {
+                    id = Integer.parseInt(idString);
+                    break;
+                } else {
+                    System.out.println("Anna id kokonaislukuna.");
+                }
             }
             System.out.println("1 päivitä kurssin nimi");
             System.out.println("2 päivitä kurssin suoritustieto");
@@ -171,12 +236,19 @@ public class TextUi {
         }
     }
     
+    /**
+     * Metodi pyytää sen kurssin id:tä, jonka suoritustietoa halutaan muuttaa.
+     * Tieto välitetään sovelluslogiikan metodille parametrina ja 
+     * (epä)onnistuneesta muutoksesta kerrotaan käyttäjälle. Metodi huolehtii myös 
+     * käyttäjän antaman syötteen validoinnista.
+     * @param id kurssin id
+     */
     private void updateCourseDone(int id) {
         boolean success = service.updateDone(id);
         int done = 0;
         for (Course course : service.getCourses()) {
             if (course.getId() == id) {
-                done = course.getId();
+                done = course.getDone();
             }
         }
         if (success) {
@@ -190,6 +262,13 @@ public class TextUi {
         }
     }
     
+    /**
+     * Metodi pyytää sen kurssin id:tä, jonka nimeä halutaan muuttaa.
+     * Tieto välitetään sovelluslogiikan metodille parametrina ja 
+     * (epä)onnistuneesta muutoksesta kerrotaan käyttäjälle. Metodi huolehtii myös 
+     * käyttäjän antaman syötteen validoinnista.
+     * @param id kurssin id
+     */
     private void updateCourseName(int id) {
         System.out.print("Anna kurssin uusi nimi: ");
         String name = scanner.nextLine();
@@ -201,14 +280,21 @@ public class TextUi {
         }
     }
     
+    /**
+     * Metodi pyytää sen kurssin id:tä, jonka pakollisuustietoa halutaan muuttaa.
+     * Tieto välitetään sovelluslogiikan metodille parametrina ja 
+     * (epä)onnistuneesta muutoksesta kerrotaan käyttäjälle. Metodi huolehtii myös 
+     * käyttäjän antaman syötteen validoinnista.
+     * @param id kurssin id
+     */
     private void updateCourseCompulsory(int id) {
+        boolean success = service.updateCourseCompulsory(id);
         int compulsory = 0;
         for (Course course: service.getCourses()) {
             if (course.getId() == id) {
                 compulsory = course.getCompulsory();
             }
         }
-        boolean success = service.updateCourseCompulsory(id);
         if (success) {
             if (compulsory == 1) {
                 System.out.println("Kurssi päivitetty pakolliseksi");
@@ -220,9 +306,25 @@ public class TextUi {
         }
     }
     
+    /**
+     * Metodi pyytää sen kurssin id:tä, jonka opintopisteitä halutaan muuttaa.
+     * Tieto välitetään sovelluslogiikan metodille parametrina ja 
+     * (epä)onnistuneesta muutoksesta kerrotaan käyttäjälle. Metodi huolehtii myös 
+     * käyttäjän antaman syötteen validoinnista.
+     * @param id kurssin id
+     */
     private void updateCoursePoints(int id) {
-        System.out.print("Anna kurssin uudet opintopisteet: ");
-        int points = Integer.parseInt(scanner.nextLine());
+            int points = 0;
+            while (true) {
+                System.out.print("Anna kurssin uudet opintopisteet: ");
+                String pointsString = scanner.nextLine();
+                if (isInputAnInteger(pointsString)) {
+                    points = Integer.parseInt(pointsString);
+                    break;
+                } else {
+                    System.out.println("Anna opintopisteet kokonaislukuna.");
+                }
+            }
         boolean success = service.updateCoursePoints(id, points);
         if (success) {
             System.out.println("Kurssin opintopisteet päivitetty.");
@@ -231,6 +333,10 @@ public class TextUi {
         }
     }
     
+    /**
+     * Metodi kertoo, onko käyttäjä kirjautunut sisään.
+     * @return true, jos loggedUser ei ole null, muuten false
+     */
     private boolean isUserLoggedIn() {
         if (service.getLoggedUser() == null) {
             System.out.println("Kirjaudu ensin sisään");
@@ -239,6 +345,10 @@ public class TextUi {
         return true;
     }
     
+    /**
+     * Metodi luo Course -olioita sisältävästä listasta merkkijonoja ja tulostaa 
+     * ne näytölle.
+     */
     private void printCourses() {
         if (service.getCourses().isEmpty()) {
             System.out.println("Ei kursseja.");
@@ -257,5 +367,23 @@ public class TextUi {
                 System.out.println("suorittamatta");
             }
         }
+    }
+    
+    /**
+     * Metodi tarkistaa, voiko annetun merkkijonon tulkita kokonaislukuna.
+     * @param string merkkijono
+     * @return true, jos merkkijono voidaan tulkita kokonaislukuna, muuten false
+     */
+    private boolean isInputAnInteger(String string) {
+        Boolean isValid = false;
+        if (!(string == null || string.trim().length() == 0)) {
+            try {
+                int points = Integer.parseInt(string);
+                isValid = true;
+            } catch (NumberFormatException e) {
+                
+            }
+        }
+        return isValid;
     }
 }

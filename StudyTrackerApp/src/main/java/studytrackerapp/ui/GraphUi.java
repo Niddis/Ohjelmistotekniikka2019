@@ -1,7 +1,6 @@
 package studytrackerapp.ui;
 
 import java.io.FileInputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import javafx.application.Application;
@@ -18,10 +17,11 @@ import studytrackerapp.database.SqlCourseDao;
 import studytrackerapp.database.SqlUserDao;
 import studytrackerapp.domain.Course;
 import studytrackerapp.domain.Service;
-
+/**
+ * Luokka sisältää sovelluksen graafisen käyttöliittymän.
+ */
 public class GraphUi extends Application {
     private Scene loginScene;
-    //private Scene newUserScene;
     private Scene coursesScene;
     private Scene newCourseScene;
     private Scene updateCourseScene;
@@ -405,7 +405,6 @@ public class GraphUi extends Application {
         updateCoursePane.add(updateCoursePointsInfo, 1, 4);
         updateCoursePane.addRow(5, updateCourseCompulsoryLabel, selectCompulsoryButtonsPane);
         updateCoursePane.addRow(6, updateCourseDoneLabel, selectDoneButtonsPane);
-        //updateCoursePane.addRow(7, updateCourseButton, backToMainSceneButton);
         updateCoursePane.add(updateCourseButton, 1, 7);
         updateCoursePane.add(backToMainSceneButton, 1, 8);
         updateCoursePane.setVgap(15);

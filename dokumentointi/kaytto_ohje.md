@@ -10,6 +10,7 @@ databaseAddress=jdbc:sqlite:sta.db
 courseFile=courses.txt
 ```
 ### Tietokanta
+
 Sovellus käyttää tietojen tallentamiseen sqlite3-tietokantaa. Jos käynnistyshakemistossa ei ole olemassa olevaa tietokantaa, sovellus luo uuden tietokannan.
 
 ### Kurssilista
@@ -115,8 +116,8 @@ Sovelluksen aloitusnäkymässä syötetään konsoliin numero 6. Sovellus tulost
 ### Kurssin tietojen päivittäminen
 
 Sovelluksen aloitusnäkymässä syötetään konsoliin numero 7. Sovellus tulostaa listan kaikista sisään kirjautuneen käyttäjän kursseista ja jokaisen kurssin alussa oleva numero on kyseisen kurssin id. Muokattava kurssi valitaan syöttämällä konsoliin sen id. Seuraavaksi valitaan haluttu muokkaustoiminto:
-* jos halutaan muuttaa kurssin nimeä, syötetään konsoliin numero 2 ja annetaan sitten uusi nimi
-* jos halutaan vaihtaa kurssin suoritustieto suorittamattomasta suoritetuksi tai päinvastoin, syötetään konsoliin numero 1
+* jos halutaan muuttaa kurssin nimeä, syötetään konsoliin numero 1 ja annetaan sitten uusi nimi
+* jos halutaan vaihtaa kurssin suoritustieto suorittamattomasta suoritetuksi tai päinvastoin, syötetään konsoliin numero 2
 * jos halutaan vaihtaa kurssin pakollisuustieto pakollisesta valinnaiseksi tai päinvastoin, syötetään konsoliin numero 3
 * jos halutaan muuttaa kurssin opintopisteistä, syötetään konsoliin numero 4 ja annetaan sitten uudet opintopisteet
 

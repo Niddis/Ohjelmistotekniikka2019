@@ -2,16 +2,14 @@ package studytrackerapp.domain;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.SimpleIntegerProperty;
 import studytrackerapp.database.CourseDao;
-import studytrackerapp.database.Database;
-import studytrackerapp.database.SqlCourseDao;
-import studytrackerapp.database.SqlUserDao;
 import studytrackerapp.database.UserDao;
-
+/**
+ * Luokka sisältää sovelluksen sovelluslogiikan.
+ */
 public class Service {
     private User loggedIn;
     private UserDao userDao;
@@ -42,14 +40,12 @@ public class Service {
     public User getLoggedUser() {
         return loggedIn;
     }
-    
+    /**
+     * Metodi muuttaa loggedIn -muuttujan nulliksi ja tyhjentää courses -listan.
+     */
     public void logout() {
         loggedIn = null;
         courses.clear();
-    }
-    
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
     }
 
     public List<Course> getCourses() {
@@ -119,7 +115,6 @@ public class Service {
     }
     /**
      * Metodi luo uuden kurssin.
-     * @param id kurssin id (oletusarvoisesti 0)
      * @param name kurssin nimi
      * @param compulsory 1 jos kurssi on pakollinen, 0 jos se on valinnainen
      * @param points kurssista saatavat opintopisteet
@@ -145,6 +140,9 @@ public class Service {
      */
     public boolean deleteCourse(int id) {
         Course course = findCourse(id);
+        if (course == null) {
+            return false;
+        }
         try {
             courseDao.delete(id, getLoggedUser().getId());
             courses.remove(course);
@@ -179,6 +177,9 @@ public class Service {
      */
     public boolean updateDone(int id) {
         Course course = findCourse(id);
+        if (course == null) {
+            return false;
+        }
         if (course.getDone() == 1) {
             course.setDone(0);
         } else {
@@ -202,6 +203,9 @@ public class Service {
      */
     public boolean updateCourse(int id, String name, int done, int compulsory, int points) {
         Course course = findCourse(id);
+        if (course == null) {
+            return false;
+        }
         try {
             course.setName(name);
             course.setDone(done);
@@ -223,6 +227,9 @@ public class Service {
      */
     public boolean updateCourseName(int id, String name) {
         Course course = findCourse(id);
+        if (course == null) {
+            return false;
+        }
         course.setName(name);
         try {
             courseDao.update(loggedIn.getId(), course);
@@ -235,11 +242,13 @@ public class Service {
      * Metodi päivittää kurssin compulsory-attribuutin arvon. Jos alkuperäinen arvo
      * on 1 (pakollinen) se vaihdetaan 0:ksi (valinnainen) ja päinvastoin.
      * @param id päivitettävän kurssin id
-     * @param compulsory päivitettävän kurssin alkuperäinen compulsory:n arvo
      * @return true, jos päivitys onnistuu, muuten false
      */
     public boolean updateCourseCompulsory(int id) {
         Course course = findCourse(id);
+        if (course == null) {
+            return false;
+        }
         if (course.getCompulsory() == 1) {
             course.setCompulsory(0);
         } else {
@@ -260,12 +269,16 @@ public class Service {
      */
     public boolean updateCoursePoints(int id, int points) {
         Course course = findCourse(id);
+        if (course == null) {
+            return false;
+        }
         course.setPoints(points);
         try {
             courseDao.update(loggedIn.getId(), course);
         } catch (Exception e) {
             return false;
         }
+        sumPoints();
         return true;
     }
     /**
@@ -279,7 +292,7 @@ public class Service {
                 sum += course.getPoints();
             }
         }
-
+        
         pointsSum = sum;
     }
     /**
@@ -306,7 +319,11 @@ public class Service {
         }
         return null;
     }
-    
+    /**
+     * Metodi käy tekstitiedoston läpi rivi kerrallaan ja luo jokaisesta rivistä Course -olion.
+     * Luodut oliot lisätään courses -muuttujaan.
+     * @param file tiedoston nimi
+     */
     private void readCourseFile(String file) {
         try {
             Files.lines(Paths.get(file))
