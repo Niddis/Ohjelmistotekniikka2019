@@ -166,7 +166,6 @@ public class Service {
         } catch (Exception e) {
             
         }
-        //System.out.println("Servicekurssit: " + courses);
         sumPoints();
         return courses;
     }
